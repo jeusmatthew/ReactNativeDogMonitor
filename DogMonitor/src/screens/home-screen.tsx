@@ -46,9 +46,8 @@ import { Dirs, FileSystem } from 'react-native-file-access';
       <Button
         title="Home screen"
         onPress={async () =>{
-          
+          navigation.navigate('Profile', { name: 'Jane' }) 
         }
-          //navigation.navigate('Profile', { name: 'Jane' })
         }
       />
       );
