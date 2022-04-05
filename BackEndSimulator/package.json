@@ -1,0 +1,24 @@
+{
+  "name": "ReactNativeDogMonitor",
+  "version": "1.0.0",
+  "description": "testing react native dog monitor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chr-leon/ReactNativeDogMonitor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chr-leon/ReactNativeDogMonitor/issues"
+  },
+  "homepage": "https://github.com/chr-leon/ReactNativeDogMonitor#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15"
+  }
+}
