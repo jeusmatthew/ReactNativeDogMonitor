@@ -19,12 +19,12 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import {ConnectionScreen, HomeStackScreen,ProfileScreen,SettingsScreen} from './src/screens'
+import {ConnectionScreen, HomeScreen, HomeStackScreen,ProfileScreen,SettingsScreen} from './src/screens'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const HomeStack = createNativeStackNavigator();
 
-const Tab = createBottomTabNavigator();
+
 // const App = () => {
 //   const isDarkMode = useColorScheme() === 'dark';
 //   const backgroundStyle = {
@@ -66,7 +66,9 @@ const App = () => {
           headerTintColor:"#FFFFFF"
         }
       }/>
-      {/* <HomeStack.Screen name="Profile" component={ProfileScreen} /> */}
+      <HomeStack.Screen name="Home" component={HomeScreen} options={{
+        headerShown:false
+      }} />
       </HomeStack.Navigator>
    </NavigationContainer>
   );
