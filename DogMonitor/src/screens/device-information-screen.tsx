@@ -17,7 +17,7 @@ export class DeviceInformationScreen extends Component {
     render(){
         return (
             // <View>
-            //     <Text>asdasd</Text>
+            //     <Text>DesconectadoDesconectado</Text>
             // </View>
             <SafeAreaView style={{flex: 1}}>
                 <View style={styles.device_name}>
@@ -27,23 +27,23 @@ export class DeviceInformationScreen extends Component {
                 <View style={styles.device_sensors}>
                     <View style={styles.device_sensor_row}>
                         <Text style={styles.text}>IMU1</Text>
-                        <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>asd</Text></View>
+                        <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>Desconectado</Text></View>
                     </View>
                     <View style={styles.device_sensor_row}>
                         <Text style={styles.text}>IMU2</Text>
-                        
+                        <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>Desconectado</Text></View>
                     </View>
                     <View style={styles.device_sensor_row}>
                         <Text style={styles.text}>Temperatura</Text>
-                        
+                        <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>Desconectado</Text></View>
                     </View>
                     <View style={styles.device_sensor_row}>
                         <Text style={styles.text}>Microfono</Text>
-                        
+                        <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>Desconectado</Text></View>
                     </View>
                     <View style={styles.device_sensor_row}>
                         <Text style={styles.text}>Polar OH1</Text>
-                        
+                        <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>Desconectado</Text></View>
                     </View>
                 </View>
             </SafeAreaView>
@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         flex:5,
         marginTop:10,
-        marginLeft:10,
-        marginRight:10,
+        marginLeft:5,
+        marginRight:5,
         //backgroundColor:"#60adb7b8"
     },
     device_sensor_row:{
@@ -93,7 +93,8 @@ const styles = StyleSheet.create({
           borderColor:"#60ADB7E5",
           borderWidth:2,
           borderRadius:10,
-          marginTop:5
+          marginTop:5,
+          paddingLeft:10
       },
       text:
       {
