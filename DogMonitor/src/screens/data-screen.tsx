@@ -1,6 +1,7 @@
 import React from "react";
-import { Image, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, StyleSheet, Text, TextInput, View,FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { RoutineItem } from "../components";
 
 export const DataScreen = ({ navigation }) => {
     return (
@@ -9,6 +10,21 @@ export const DataScreen = ({ navigation }) => {
           <TextInput style = {styles.text_input} placeholder="Nombre de la mascota"/>
           <Image source={require('../../assets/search.png')} style={styles.search_icon} />
         </View>
+        <FlatList
+        data={[
+          {key: 'Devin'},
+          {key: 'Dan'},
+          {key: 'Dominic'},
+          {key: 'Jackson'},
+          {key: 'James'},
+          {key: 'Joel'},
+          {key: 'John'},
+          {key: 'Jillian'},
+          {key: 'Jimmy'},
+          {key: 'Julie'},
+        ]}
+        renderItem={({item}) => <RoutineItem name={item.key}/>}
+      />
       </SafeAreaView>
       );
 };
@@ -45,5 +61,10 @@ const styles = StyleSheet.create({
       width:25,
       height:25,
       marginRight:5
-    }
+    },
+    item: {
+      padding: 10,
+      fontSize: 18,
+      height: 44,
+    },
   });
