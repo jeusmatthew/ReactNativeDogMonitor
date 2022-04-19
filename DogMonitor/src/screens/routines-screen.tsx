@@ -1,8 +1,9 @@
-import * as React from 'react';
+import React,{ useState }  from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, TextInput,Check, TouchableOpacity, View } from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 export const RoutinesScreen = ({ navigation }) => {
+  const [minutesEnabled,setMinutesEnabled] = useState(false);
     return (
       <SafeAreaView style={styles.safe_area}>
         <Text style={styles.text}>Nombre de rutina</Text>
@@ -16,11 +17,14 @@ export const RoutinesScreen = ({ navigation }) => {
           text="Definir duración de rutina"
           iconStyle={{ borderColor: "#60ADB7" }}
           textStyle={{ fontFamily: "JosefinSans-Regular" }}
-          onPress={(isChecked: boolean) => {}}
+          onPress={(isChecked: boolean) => {setMinutesEnabled(isChecked)}}
           style={{marginBottom:10}}
         />
-        <Text style={styles.text}>Tiempo</Text>
-        <TextInput style={styles.text_input } placeholder="Tiempo en minutos de entrenamiento"/>
+        {
+          minutesEnabled ? (<View>
+          <Text style={styles.text}>Tiempo</Text>
+          <TextInput style={styles.text_input } placeholder="Tiempo en minutos de entrenamiento"/>
+        </View>) :null}
         <View style={styles.buttons_area} >
             <TouchableOpacity
                     style={styles.button_red}

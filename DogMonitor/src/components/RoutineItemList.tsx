@@ -53,6 +53,7 @@ const styleSheet = StyleSheet.create({
     paddingBottom: 8,
     backgroundColor:"#60ADB7",
     borderRadius:10
+    
   },
  
   dog_name: {
