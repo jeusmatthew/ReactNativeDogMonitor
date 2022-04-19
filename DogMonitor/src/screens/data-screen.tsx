@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import { Image, StyleSheet, Text, TextInput, View,FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RoutineItem } from "../components";
 import { Routine } from '../models';
 import { RoutineService } from '../services/routine-service';
 
+const routinesArray:Routine[] = []
+
 export const DataScreen = ({ navigation }) => {
+  const [routines,setRoutines] = useState(routinesArray);
   useEffect( () => {
     // code to run on component mount
     async function getRoutines() {
       console.log("loading routines...");
-      const routines:Routine[] = await RoutineService.listRoutines();
+      const routinesList:Routine[] = await RoutineService.listRoutines();
+      setRoutines(routinesList);
       console.log("routines: ",routines);
     }
     getRoutines();
