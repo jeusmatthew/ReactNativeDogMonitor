@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react'
-import { Image, StyleSheet, Text, TextInput, View,FlatList } from "react-native";
+import { Image, StyleSheet, Text, TextInput, View,FlatList, Touchable, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RoutineItem } from "../components";
 import { Routine } from '../models';
@@ -23,22 +23,14 @@ export const DataScreen = ({ navigation }) => {
       <SafeAreaView style = {styles.safe_area}>
         <View style ={styles.text_input_view}>
           <TextInput style = {styles.text_input} placeholder="Nombre de la mascota"/>
+          <TouchableOpacity onPress={()=>{console.log("Searching routines...");}}>
           <Image source={require('../../assets/search.png')} style={styles.search_icon} />
+          </TouchableOpacity>
         </View>
         <FlatList
-        data={[
-          {key: 'Devin'},
-          {key: 'Dan'},
-          {key: 'Dominic'},
-          {key: 'Jackson'},
-          {key: 'James'},
-          {key: 'Joel'},
-          {key: 'John'},
-          {key: 'Jillian'},
-          {key: 'Jimmy'},
-          {key: 'Julie'},
-        ]}
-        renderItem={({item}) => <RoutineItem name={item.key}/>}
+        style={{marginLeft:10,marginRight:10}}
+        data={routines}
+        renderItem={({item}) => <RoutineItem routine={item}/>}
       />
       </SafeAreaView>
       );
