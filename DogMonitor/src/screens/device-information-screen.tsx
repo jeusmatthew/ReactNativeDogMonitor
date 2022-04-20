@@ -1,14 +1,23 @@
 import * as React from 'react';
-import { ActivityIndicator, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useState,useEffect} from 'react';
 import { DeviceService } from '../services';
-
+import { DeviceSensors } from '../models';
+const deviceSensorsObject:DeviceSensors = {
+    imu1:false,
+    imu2:false,
+    microphone:false,
+    polar:false,
+    temperature:false
+} 
 export const DeviceInformationScreen = ({ navigation }) => {
     //Properties section
     const [loadingDeviceName,setLoadingDeviceName] = useState(true);
     const [loadingDeviceSensors,setLoadingDeviceSensors] = useState(true);
     const [loadingData,setLoadingData] = useState(true);
     const [deviceName,setDeviceName] = useState('');
+    const [deviceSensors,setDeviceSensors] = useState(deviceSensorsObject);
+    const [isModalVisible,setModalVisibility] = useState(false);
     // functions sections
     useEffect( () => {
         // code to run on component mount
@@ -22,6 +31,7 @@ export const DeviceInformationScreen = ({ navigation }) => {
                 console.log(deviceSensors);
                 console.log("done...");
                 setDeviceName(device.name);
+                setDeviceSensors(deviceSensors);
                 setLoadingData(false)
             }catch(_error)
             {   
@@ -33,6 +43,26 @@ export const DeviceInformationScreen = ({ navigation }) => {
     return (
         
         <SafeAreaView style={{flex: 1}}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={() => {
+            //Alert.alert("Modal has been closed.");
+            setModalVisibility(false);
+            console.log("close  modal...");
+            
+          }}
+        >
+            <TouchableOpacity style={{flex:1}} onPress={(()=>{setModalVisibility(false);})} >
+                <TouchableWithoutFeedback>
+                    <View style={styles.modal_container}>
+                    </View>
+                </TouchableWithoutFeedback>
+            </TouchableOpacity>
+
+
+        </Modal>
             {loadingData ? 
             (<View style={styles.loading_data_container}>
                   <ActivityIndicator size="large" color="#60ADB7" />
@@ -42,32 +72,59 @@ export const DeviceInformationScreen = ({ navigation }) => {
                 <Text style={styles.dog_name_label}>Nombre del dispositivo</Text>
                 <View style ={styles.text_input_view}>
                     <TextInput  placeholder="Nombre del dispositivo" value={deviceName}/>
-                    <TouchableOpacity onPress={()=>{console.log("Edit device name...");}}>
-                    <Image source={require('../../assets/pencil.png')} style={styles.edit_icon} />
+                    <TouchableOpacity onPress={()=>{setModalVisibility(true)}}>
+                    <Image source={require('../../assets/pencil.png')} style={styles.edit_icon}  />
                     </TouchableOpacity>
                 </View>
                 
                 
                 <View style={styles.device_sensors}>
                     <View style={styles.device_sensor_row}>
-                        <Text style={styles.text}>IMU1</Text>
-                        <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>Desconectado</Text></View>
+                        
+                        {
+                        deviceSensors.imu1 ? (
+                            <><Text style={styles.text}>IMU1</Text><View style={styles.green_tag}><Text style={styles.text_status}>Desconectado</Text></View></>
+                        ):(
+                            <><Text style={styles.text}>IMU1</Text><View style={styles.red_tag}><Text style={styles.text_status}>Desconectado</Text></View></>
+                        )
+                        }
                     </View>
                     <View style={styles.device_sensor_row}>
-                        <Text style={styles.text}>IMU2</Text>
-                        <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>Desconectado</Text></View>
+                        {
+                        deviceSensors.imu2 ? (
+                            <><Text style={styles.text}>IMU2</Text><View style={styles.green_tag}><Text style={styles.text_status}>Conectado</Text></View></>
+                        ):(
+                            <><Text style={styles.text}>IMU2</Text><View style={styles.red_tag}><Text style={styles.text_status}>Desconectado</Text></View></>
+                        )
+                        }
                     </View>
                     <View style={styles.device_sensor_row}>
-                        <Text style={styles.text}>Temperatura</Text>
-                        <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>Desconectado</Text></View>
+                        {
+                        deviceSensors.temperature ? (
+                            <><Text style={styles.text}>Temperatura</Text><View style={styles.green_tag}><Text style={styles.text_status}>Conectado</Text></View></>
+                        ):(
+                            <><Text style={styles.text}>Temperatura</Text><View style={styles.red_tag}><Text style={styles.text_status}>Desconectado</Text></View></>
+                        )
+                        }
+                        
                     </View>
                     <View style={styles.device_sensor_row}>
-                        <Text style={styles.text}>Microfono</Text>
-                        <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>Desconectado</Text></View>
+                        {
+                        deviceSensors.microphone ? (
+                            <><Text style={styles.text}>Microfono</Text><View style={styles.green_tag}><Text style={styles.text_status}>Conectado</Text></View></>
+                        ):(
+                            <><Text style={styles.text}>Microfono</Text><View style={styles.red_tag}><Text style={styles.text_status}>Desconectado</Text></View></>
+                        )
+                        }
                     </View>
                     <View style={styles.device_sensor_row}>
-                        <Text style={styles.text}>Polar OH1</Text>
-                        <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>Desconectado</Text></View>
+                        {
+                        deviceSensors.polar ? (
+                            <><Text style={styles.text}>Polar OH1</Text><View style={styles.green_tag}><Text style={styles.text_status}>Conectado</Text></View></>
+                        ):(
+                            <><Text style={styles.text}>Polar OH1</Text><View style={styles.red_tag}><Text style={styles.text_status}>Desconectado</Text></View></>
+                        )
+                        }
                     </View>
                 </View>
             </View>)
@@ -78,6 +135,42 @@ export const DeviceInformationScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    button2: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+      },
+      buttonOpen: {
+        backgroundColor: "#F194FF",
+      },
+      buttonClose: {
+        backgroundColor: "#2196F3",
+      },
+    modal_container:
+    {
+        backgroundColor:'#ffffff',
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 40,
+        marginBottom:40,
+        marginLeft:20,
+        marginRight:20,
+        elevation:100,
+    },
+    red_tag:{
+        backgroundColor: "red",
+        borderRadius: 20,
+        height:40,
+        width:130,
+    },
+    green_tag:{
+        backgroundColor: "#6DB77D", 
+        borderRadius: 20,
+        height:40,
+        width:130,
+        
+    },
     loading_data_container:
     {
         flex:1,

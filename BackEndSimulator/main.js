@@ -21,7 +21,7 @@ app.get('/device/sensors', (req, res) => {
     imu2:false,
     temperature:true,
     microphone:true,
-    polar:true
+    polar:false
   });
 })
 
