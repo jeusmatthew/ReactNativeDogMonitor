@@ -1,29 +1,53 @@
 import * as React from 'react';
-import { SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { Component } from 'react';
+import { ActivityIndicator, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useState,useEffect} from 'react';
+import { DeviceService } from '../services';
 
-// export const DeviceInformationScreen = ({ navigation }) => {
-//     return (
-//       <Text>This is the data screen</Text>
-//       );
-// };
-export class DeviceInformationScreen extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
+export const DeviceInformationScreen = ({ navigation }) => {
+    //Properties section
+    const [loadingDeviceName,setLoadingDeviceName] = useState(true);
+    const [loadingDeviceSensors,setLoadingDeviceSensors] = useState(true);
+    const [loadingData,setLoadingData] = useState(true);
+    const [deviceName,setDeviceName] = useState('');
+    // functions sections
+    useEffect( () => {
+        // code to run on component mount
+        async function getDeviceInformation() {
+            try{
+                console.log("loading data...");
+                
+                const device = await DeviceService.getDeviceInformation();
+                const deviceSensors =  await  DeviceService.getDeviceSensorsInformation();
+                console.log(device);
+                console.log(deviceSensors);
+                console.log("done...");
+                setDeviceName(device.name);
+                setLoadingData(false)
+            }catch(_error)
+            {   
+                
+            }
+        }
+        getDeviceInformation();
+        },[])
+    return (
         
-      };
-    }
-    render(){
-        return (
-            // <View>
-            //     <Text>DesconectadoDesconectado</Text>
-            // </View>
-            <SafeAreaView style={{flex: 1}}>
-                <View style={styles.device_name}>
-                    <Text style={styles.text}>Nombre del dispositivo</Text>
-                    <TextInput placeholder='Escribe el nombre del dispositivo' style={styles.text_input}></TextInput>
+        <SafeAreaView style={{flex: 1}}>
+            {loadingData ? 
+            (<View style={styles.loading_data_container}>
+                  <ActivityIndicator size="large" color="#60ADB7" />
+                  <Text>Cargando...</Text>
+            </View>) :
+            (<View style={{flex:1}}>
+                <Text style={styles.dog_name_label}>Nombre del dispositivo</Text>
+                <View style ={styles.text_input_view}>
+                    <TextInput  placeholder="Nombre del dispositivo" value={deviceName}/>
+                    <TouchableOpacity onPress={()=>{console.log("Edit device name...");}}>
+                    <Image source={require('../../assets/pencil.png')} style={styles.edit_icon} />
+                    </TouchableOpacity>
                 </View>
+                
+                
                 <View style={styles.device_sensors}>
                     <View style={styles.device_sensor_row}>
                         <Text style={styles.text}>IMU1</Text>
@@ -46,13 +70,20 @@ export class DeviceInformationScreen extends Component {
                         <View style={{backgroundColor:"red",borderRadius:20}}><Text style={styles.text_status}>Desconectado</Text></View>
                     </View>
                 </View>
-            </SafeAreaView>
-        
-        );
-    }
-}
+            </View>)
+            }
+        </SafeAreaView>
+    
+    );
+};
 
 const styles = StyleSheet.create({
+    loading_data_container:
+    {
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
+    },
     device_name:{
         flexDirection:'column',
         flex:1,
@@ -102,6 +133,13 @@ const styles = StyleSheet.create({
           marginRight:5,
           color:"#717171"
       },
+      dog_name_label:{
+        marginLeft:10,
+        marginRight:10,
+        marginBottom:5,
+        marginTop:10
+      }
+      ,
       text_status:
       {
           marginLeft:20,
@@ -109,5 +147,22 @@ const styles = StyleSheet.create({
           marginTop:10,
           marginBottom:10,
           color:"#FFFFFF"
+      },
+      text_input_view:
+      {
+        borderColor:"#60ADB7E5",
+        borderWidth:2,
+        borderRadius:10,
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"space-between",
+        marginLeft:10,
+        marginRight:10
+      },
+      edit_icon:
+      {
+        width:25,
+        height:25,
+        marginRight:10
       }
     });
