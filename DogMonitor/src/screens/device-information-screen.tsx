@@ -83,7 +83,7 @@ export const DeviceInformationScreen = ({ navigation }) => {
                         
                         {
                         deviceSensors.imu1 ? (
-                            <><Text style={styles.text}>IMU1</Text><View style={styles.green_tag}><Text style={styles.text_status}>Desconectado</Text></View></>
+                            <><Text style={styles.text}>IMU1</Text><View style={styles.green_tag}><Text style={styles.text_status}>Conectado</Text></View></>
                         ):(
                             <><Text style={styles.text}>IMU1</Text><View style={styles.red_tag}><Text style={styles.text_status}>Desconectado</Text></View></>
                         )
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         height:40,
         width:130,
-        
+        alignItems:'center'
     },
     loading_data_container:
     {
