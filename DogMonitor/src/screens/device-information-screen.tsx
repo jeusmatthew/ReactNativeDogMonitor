@@ -78,6 +78,7 @@ export const DeviceInformationScreen = ({ navigation }) => {
                              setSendingDeviceNmae(true);
                              await DeviceService.updateDeviceInformation({name:deviceName});
                              setSendingDeviceNmae(false);
+                             setModalVisibility(false);
                             }}>
                                 <Text style={styles.button_text}>Guardar</Text>
                                 
