@@ -18,6 +18,7 @@ export const DeviceInformationScreen = ({ navigation }) => {
     const [deviceName,setDeviceName] = useState('');
     const [deviceSensors,setDeviceSensors] = useState(deviceSensorsObject);
     const [isModalVisible,setModalVisibility] = useState(false);
+    const [isSendingDeviceName,setSendingDeviceNmae] =useState(false)
     // functions sections
     useEffect( () => {
         // code to run on component mount
@@ -54,14 +55,54 @@ export const DeviceInformationScreen = ({ navigation }) => {
             
           }}
         >
-            <TouchableOpacity style={{flex:1}} onPress={(()=>{setModalVisibility(false);})} >
+            <TouchableOpacity style={{flex:1,alignItems:'center',justifyContent:'center'}} onPress={(()=>{setModalVisibility(false);})} >
+            <View style={styles.modal_container}>
+                <TouchableWithoutFeedback>
+                 <View style={styles.modal_card_container}>
+                        <View style={{alignItems:'flex-end'}}>
+                            <TouchableOpacity onPress={()=>{setModalVisibility(false)}}>
+                            <Image source={require('../../assets/close.png')} style={styles.close_icon}  />
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                        <Text style={styles.modal_text_label} >Nombre del dispositivo</Text>
+                        <TextInput value={deviceName} style={styles.modal_text_input}/>
+                        </View>
+                        <View style={styles.modal_buttons_container}>
+                            <TouchableOpacity  disabled={isSendingDeviceName} style={styles.cancel_button} onPress={(()=>{setModalVisibility(false);})} >
+                                <Text style={styles.button_text}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity disabled={isSendingDeviceName} style={styles.save_button} onPress={()=>{
+                             setSendingDeviceNmae(true)
+                            }}>
+                                <Text style={styles.button_text}>Guardar</Text>
+                                
+                            </TouchableOpacity>
+                        </View>
+                        { isSendingDeviceName ? <ActivityIndicator   style={{marginBottom:20}}></ActivityIndicator> : null}
+                </View>
+                </TouchableWithoutFeedback>
+            </View>
+            </TouchableOpacity>
+            {/* <TouchableOpacity style={{flex:1, backgroundColor:'blue',alignItems:'center',justifyContent:'center'}} onPress={(()=>{setModalVisibility(false);})} >
                 <TouchableWithoutFeedback>
                     <View style={styles.modal_container}>
+                        <View>
+                        <Text style={styles.modal_text_label} >Nombre del dispositivo</Text>
+                        <TextInput value={deviceName} style={styles.modal_text_input}/>
+                        </View>
+                        <View style={styles.modal_buttons_container}>
+                            <TouchableOpacity style={styles.save_button}>
+                                <Text style={styles.button_text}>Guardar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.cancel_button}>
+                                <Text style={styles.button_text}>Cancelar</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
+                    
                 </TouchableWithoutFeedback>
-            </TouchableOpacity>
-
-
+            </TouchableOpacity> */}
         </Modal>
             {loadingData ? 
             (<View style={styles.loading_data_container}>
@@ -135,6 +176,54 @@ export const DeviceInformationScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    button_text:{
+        color:"#ffffff",
+        marginLeft:30,
+        marginRight:30,
+        marginTop:10,
+        marginBottom:10,
+        borderRadius:10,
+
+    },
+    modal_buttons_container:
+    {
+        marginTop:20,
+        marginLeft:30,
+        marginRight:30,
+        flexDirection:'row',
+        justifyContent:'space-between',
+        marginBottom:30
+        
+    },
+    save_button:
+    {
+        flexDirection:'row',
+        backgroundColor:"#6DB77D",
+        borderRadius:10
+    },
+    cancel_button:
+    {
+        flexDirection:'row',
+        backgroundColor:"#DF7985",
+        borderRadius:10
+    },
+    modal_text_input:{
+        borderColor:"#60ADB7E5",
+        borderWidth:2,
+        borderRadius:10,
+        marginLeft:20,
+        marginRight:20,
+        marginTop:5
+
+    },modal_text_label:
+    {
+        marginTop:5,
+        marginLeft:20,
+        marginRight:20,
+        fontWeight:'bold',
+        marginBottom:7
+
+    },
     button2: {
         borderRadius: 20,
         padding: 10,
@@ -148,18 +237,20 @@ const styles = StyleSheet.create({
       },
     modal_container:
     {
-        backgroundColor:'#ffffff',
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 200,
-        marginBottom:200,
-        marginLeft:20,
-        marginRight:20,
-        elevation:150,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    modal_card_container:
+    {
+        backgroundColor:"#ffffff",
+        width: 300,
+        height: 250,
+        justifyContent:'space-between'
     },
     red_tag:{
-        backgroundColor: "red",
+        backgroundColor: "#DF7985",
         borderRadius: 20,
         height:40,
         width:130,
@@ -256,6 +347,13 @@ const styles = StyleSheet.create({
       {
         width:25,
         height:25,
-        marginRight:10
+        marginRight:10,
+      },
+      close_icon:
+      {
+        width:25,
+        height:25,
+        marginRight:10,
+        marginTop:10
       }
     });
