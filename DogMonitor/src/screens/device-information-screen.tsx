@@ -66,14 +66,18 @@ export const DeviceInformationScreen = ({ navigation }) => {
                         </View>
                         <View>
                         <Text style={styles.modal_text_label} >Nombre del dispositivo</Text>
-                        <TextInput value={deviceName} style={styles.modal_text_input}/>
+                        <TextInput value={deviceName} style={styles.modal_text_input} onChangeText={(text)=>{
+                            setDeviceName(text)
+                        }}/>
                         </View>
                         <View style={styles.modal_buttons_container}>
                             <TouchableOpacity  disabled={isSendingDeviceName} style={styles.cancel_button} onPress={(()=>{setModalVisibility(false);})} >
                                 <Text style={styles.button_text}>Cancelar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity disabled={isSendingDeviceName} style={styles.save_button} onPress={()=>{
-                             setSendingDeviceNmae(true)
+                            <TouchableOpacity disabled={isSendingDeviceName} style={styles.save_button} onPress={async ()=>{
+                             setSendingDeviceNmae(true);
+                             await DeviceService.updateDeviceInformation({name:deviceName});
+                             setSendingDeviceNmae(false);
                             }}>
                                 <Text style={styles.button_text}>Guardar</Text>
                                 
@@ -112,7 +116,7 @@ export const DeviceInformationScreen = ({ navigation }) => {
             (<View style={{flex:1}}>
                 <Text style={styles.dog_name_label}>Nombre del dispositivo</Text>
                 <View style ={styles.text_input_view}>
-                    <TextInput  placeholder="Nombre del dispositivo" value={deviceName}/>
+                    <TextInput editable={false} placeholder="Nombre del dispositivo" value={deviceName}/>
                     <TouchableOpacity onPress={()=>{setModalVisibility(true)}}>
                     <Image source={require('../../assets/pencil.png')} style={styles.edit_icon}  />
                     </TouchableOpacity>

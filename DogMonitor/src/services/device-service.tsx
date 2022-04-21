@@ -18,4 +18,11 @@ export namespace DeviceService
             return deviceSensors; 
     }
 
+    export const updateDeviceInformation = async (input:Device):Promise<Device>=>
+    {
+        const deviceResponse:AxiosResponse  =await axios.post(`${BASE_URL}/device`,input);   
+        const deviceData:Device = deviceResponse.data;
+        return deviceData; 
+    }
+
 }
