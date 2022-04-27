@@ -1,7 +1,7 @@
 
-export const BASE_URL ="http://30e4e7351eb6.ngrok.io";
+export const BASE_URL ="http://8cf8932f038c.ngrok.io";
+export const MAX_ROUTINE_TIME=15
 export enum Titles 
 {
     CONNNECTING_PAGE="Dog training data collector"
-
 }
