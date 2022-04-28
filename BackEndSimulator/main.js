@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 const { response } = require('express');
 const app = express()
 const port = 3000
-const NUMBER_OF_SAMPLES =2;
+const NUMBER_OF_SAMPLES =100;
 let deviceName='pechera1'
 app.use(bodyParser.json())
 app.get('/health', (req, res) => {
@@ -17,6 +17,7 @@ app.get('/routine', (req, res) => {
 
 app.get('/routine/:routine_id', (req, res) => {
   const routineId=req.params.routine_id;
+  console.log("generating routine....");
   const routine = RoutinesArray.find(routine => routine.id == routineId);
   let response = 
   {
@@ -33,6 +34,7 @@ app.get('/routine/:routine_id', (req, res) => {
     imu_head:generateHeadImu(routineId),
     audio:generateAudio(routineId)
   }
+  console.log("ready to return...");
   res.status(200).send(response);
 })
 

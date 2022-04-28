@@ -8,7 +8,8 @@ export interface Routine {
     start_date:Date;
     end_date:Date;
     dog_name:string;
-    imu?:Imu[];
+    imu_tail?:Imu[];
+    imu_head?:Imu[];
     temperature?:Temperature[];
     heart_rate?:HeartRate[];
     audio?:Audio[];

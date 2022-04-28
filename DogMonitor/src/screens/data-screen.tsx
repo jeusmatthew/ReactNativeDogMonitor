@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react'
-import { Image, StyleSheet, Text, TextInput, View,FlatList, Touchable, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, Text, TextInput, View,FlatList, Touchable, TouchableOpacity, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RoutineItem } from "../components";
 import { Routine } from '../models';
@@ -9,6 +9,7 @@ const routinesArray:Routine[] = []
 
 export const DataScreen = ({ navigation }) => {
   const [routines,setRoutines] = useState(routinesArray);
+  const [downloadingRoutine,setDownloadingRoutine] = useState(false)
   useEffect( () => {
     // code to run on component mount
     async function getRoutines() {
@@ -21,6 +22,7 @@ export const DataScreen = ({ navigation }) => {
     },[])
     return (
       <SafeAreaView style = {styles.safe_area}>
+        { downloadingRoutine ? <ActivityIndicator  ></ActivityIndicator> : null }
         <View style ={styles.text_input_view}>
           <TextInput style = {styles.text_input} placeholder="Nombre de la mascota"/>
           <TouchableOpacity onPress={()=>{console.log("Searching routines...");}}>
@@ -30,7 +32,7 @@ export const DataScreen = ({ navigation }) => {
         <FlatList
         style={{marginLeft:10,marginRight:10}}
         data={routines}
-        renderItem={({item}) => <RoutineItem routine={item}/>}
+        renderItem={({item}) => <RoutineItem routine={item} downloadData={(value:boolean)=>{setDownloadingRoutine(value)}}/>}
       />
       </SafeAreaView>
       );

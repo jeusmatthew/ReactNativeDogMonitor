@@ -1,32 +1,62 @@
   
-import React from 'react';
-import { Alert, View, StyleSheet, SafeAreaView, FlatList, Text, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, View, StyleSheet, SafeAreaView, FlatList, Text, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Routine } from '../models';
+import { RoutineService } from '../services/routine-service';
 
-  export const RoutineItem = ({routine}) => (
-    <View style={styleSheet.item}>
-      <View style={styleSheet.MainContainer}>
-        <Text style={styleSheet.routine_name}>{routine.name}</Text>
-        <Text style={styleSheet.dog_name}>{routine.dog_name}</Text>
-        <View style={styleSheet.date_container}>
-          <Text style={styleSheet.dates}>Inicio: </Text>
-          <Text style={styleSheet.dates}>01/01/1999 00:00:00</Text>
-        </View>
-        <View style={styleSheet.date_container}>
-          <Text style={styleSheet.dates}>Fin: </Text>
-          <Text style={styleSheet.dates}>01/01/1999 23:59:59</Text>
-        </View>
-      </View>
-      <TouchableOpacity style={styleSheet.image_container} onPress={()=>{downloadDataPressed(routine)}}>
-        <Image source={require('../../assets/download.png')} style={styleSheet.download_image}/>
-      </TouchableOpacity>
-    </View>
-  );
+  // export const RoutineItem = ({routine}) => (
+  //   <View style={styleSheet.item}>
+  //     <View style={styleSheet.MainContainer}>
+  //       <Text style={styleSheet.routine_name}>{routine.name}</Text>
+  //       <Text style={styleSheet.dog_name}>{routine.dog_name}</Text>
+  //       <View style={styleSheet.date_container}>
+  //         <Text style={styleSheet.dates}>Inicio: </Text>
+  //         <Text style={styleSheet.dates}>01/01/1999 00:00:00</Text>
+  //       </View>
+  //       <View style={styleSheet.date_container}>
+  //         <Text style={styleSheet.dates}>Fin: </Text>
+  //         <Text style={styleSheet.dates}>01/01/1999 23:59:59</Text>
+  //       </View>
+  //     </View>
+  //     <TouchableOpacity style={styleSheet.image_container} onPress={()=>{downloadDataPressed(routine)}}>
+  //       <Image source={require('../../assets/download.png')} style={styleSheet.download_image}/>
+  //     </TouchableOpacity>
+  //     <ActivityIndicator ></ActivityIndicator>
+  //   </View>
+  // );
+  export const RoutineItem = ({ routine,downloadData }) => {
+    const [downloadingData,setDownloadingFlag] = useState(false);
 
-  const downloadDataPressed = (routine:Routine)=>
+      return (
+        <View style={styleSheet.item}>
+          <View style={styleSheet.MainContainer}>
+            <Text style={styleSheet.routine_name}>{routine.name}</Text>
+            <Text style={styleSheet.dog_name}>{routine.dog_name}</Text>
+            <View style={styleSheet.date_container}>
+              <Text style={styleSheet.dates}>Inicio: </Text>
+              <Text style={styleSheet.dates}>01/01/1999 00:00:00</Text>
+            </View>
+            <View style={styleSheet.date_container}>
+              <Text style={styleSheet.dates}>Fin: </Text>
+              <Text style={styleSheet.dates}>01/01/1999 23:59:59</Text>
+            </View>
+          </View>
+          {/* <TouchableOpacity style={styleSheet.image_container} onPress={()=>{downloadDataPressed(routine)}}> */}
+          <TouchableOpacity style={styleSheet.image_container} onPress={()=>{downloadDataPressed(routine,downloadData)}}>
+            <Image source={require('../../assets/download.png')} style={styleSheet.download_image}/>
+          </TouchableOpacity>
+          {/* <ActivityIndicator ></ActivityIndicator> */}
+        </View>
+        );
+  };
+
+  const downloadDataPressed =async  (routine:Routine,downloadData:any)=>
   {
-    console.log(routine.name);
-    
+    console.log("seachig routine with id: ",routine.id);
+    downloadData(true)
+    const routineInDevice =  await RoutineService.getRoutineById(routine.id)
+    console.log("search routine done...");
+    downloadData(false)
   }
 const styleSheet = StyleSheet.create({
  
