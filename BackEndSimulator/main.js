@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 const { response } = require('express');
 const app = express()
 const port = 3000
-const NUMBER_OF_SAMPLES =100;
+const NUMBER_OF_SAMPLES =36000;
 let deviceName='pechera1'
 app.use(bodyParser.json())
 app.get('/health', (req, res) => {

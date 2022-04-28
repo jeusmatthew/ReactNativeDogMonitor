@@ -21,6 +21,8 @@ export namespace RoutineService
         try{
             const routineResponse:AxiosResponse  =await axios.get(`${BASE_URL}/routine/${routineId}`);   
             const routine:Routine =routineResponse.data; 
+            console.log("----------------------------");
+            
             return routine
         }catch(_error)
         {
