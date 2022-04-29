@@ -10,6 +10,7 @@ const routinesArray:Routine[] = []
 export const DataScreen = ({ navigation }) => {
   const [routines,setRoutines] = useState(routinesArray);
   const [downloadingRoutine,setDownloadingRoutine] = useState(false)
+  const [savingRoutine,setSavingRoutine] = useState(false)
   const [modalVisibility,setModalVisibility] = useState(false)
   useEffect( () => {
     // code to run on component mount
@@ -26,7 +27,7 @@ export const DataScreen = ({ navigation }) => {
           <Modal
           animationType="slide"
           transparent={true}
-          visible={downloadingRoutine}
+          visible={downloadingRoutine || savingRoutine}
           onRequestClose={() => {
             //Alert.alert("Modal has been closed.");
             setModalVisibility(false);
@@ -65,7 +66,8 @@ export const DataScreen = ({ navigation }) => {
                         </View>
                         { isSendingDeviceName ? <ActivityIndicator   style={{marginBottom:20}}></ActivityIndicator> : null} */}
                         <ActivityIndicator  ></ActivityIndicator>
-                        <Text style={styles.text_downloading_data} >Descargando datos...</Text>
+                        { downloadingRoutine ? (<Text style={styles.text_downloading_data} >Descargando datos...</Text>):null}
+                        { savingRoutine? (<Text style={styles.text_downloading_data} >Guardando datos en memoria interna...</Text>):null}
                 </View>
                 </TouchableWithoutFeedback>
             </View>
@@ -79,7 +81,7 @@ export const DataScreen = ({ navigation }) => {
         <FlatList
         style={{marginLeft:10,marginRight:10}}
         data={routines}
-        renderItem={({item}) => <RoutineItem routine={item} downloadData={(value:boolean)=>{setDownloadingRoutine(value)}}/>}
+        renderItem={({item}) => <RoutineItem routine={item} downloadData={(value:boolean)=>{setDownloadingRoutine(value)}} savingInDevice={(value:boolean)=>{setSavingRoutine(value)}}/>}
       />
       </SafeAreaView>
       );

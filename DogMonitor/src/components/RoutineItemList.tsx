@@ -1,6 +1,7 @@
   
 import React, { useState } from 'react';
-import { Alert, View, StyleSheet, SafeAreaView, FlatList, Text, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import {ToastAndroid, Alert, View, StyleSheet, SafeAreaView, FlatList, Text, TouchableOpacity, Image, ActivityIndicator, PermissionsAndroid } from 'react-native';
+import { Dirs, FileSystem } from 'react-native-file-access';
 import { Routine } from '../models';
 import { RoutineService } from '../services/routine-service';
 
@@ -24,7 +25,7 @@ import { RoutineService } from '../services/routine-service';
   //     <ActivityIndicator ></ActivityIndicator>
   //   </View>
   // );
-  export const RoutineItem = ({ routine,downloadData }) => {
+  export const RoutineItem = ({ routine,downloadData,savingInDevice }) => {
     const [downloadingData,setDownloadingFlag] = useState(false);
 
       return (
@@ -42,7 +43,7 @@ import { RoutineService } from '../services/routine-service';
             </View>
           </View>
           {/* <TouchableOpacity style={styleSheet.image_container} onPress={()=>{downloadDataPressed(routine)}}> */}
-          <TouchableOpacity style={styleSheet.image_container} onPress={()=>{downloadDataPressed(routine,downloadData)}}>
+          <TouchableOpacity style={styleSheet.image_container} onPress={()=>{downloadDataPressed(routine,downloadData,savingInDevice)}}>
             <Image source={require('../../assets/download.png')} style={styleSheet.download_image}/>
           </TouchableOpacity>
           {/* <ActivityIndicator ></ActivityIndicator> */}
@@ -50,13 +51,71 @@ import { RoutineService } from '../services/routine-service';
         );
   };
 
-  const downloadDataPressed =async  (routine:Routine,downloadData:any)=>
+  function showToast() {
+    ToastAndroid.show('Se requieren los permisos para descargar los datos', ToastAndroid.SHORT);
+  }
+  const tryToGetPermissions = async ():Promise<boolean>=>
   {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: "Permiso de almacenamiento",
+          message:
+            "DogMonitor necesita permisos para escribir en el almacenamiento interno y guardar los datos en la carpeta de descargas",
+          // buttonNeutral: "Preguntar mas tarde",
+          // buttonNegative: "Cancelar",
+          buttonPositive: "Aceptar"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("You can use the camera");
+       return true;
+      } else {
+        console.log("Camera permission denied");
+        return false
+      }
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
+
+  }
+  const saveRoutineInDownloads = async (routine:Routine)=>
+  {
+    try{
+      console.log("creating directory");
+      const routineAsString = JSON.stringify(routine);
+      const fileName = `${routine.name}_${routine.start_date.toString()}_${routine.end_date.toString()}.txt`
+      const path =`${Dirs.DocumentDir}/${fileName}`;
+      console.log(`saving in path ${path}...`);
+      const text = await FileSystem.writeFile(path,routineAsString,"utf8");
+      if (!FileSystem.exists(path)) return;// check to see if our filePath was created
+      await FileSystem.cpExternal(path,fileName,'downloads');// copies our file to the downloads folder/directory
+      ToastAndroid.show('Se han descargado los datos correctamente', ToastAndroid.SHORT);
+    }catch(e)
+    {
+      console.log(e);
+      ToastAndroid.show('Error escribiendo en el almacenamiento interno', ToastAndroid.SHORT);
+    }
+    
+  }
+  const downloadDataPressed =async  (routine:Routine,downloadData:any,savingInDevice:any)=>
+  {
+    const granted = await tryToGetPermissions()
+    if(!granted){
+     showToast();
+     return 
+    }
     console.log("seachig routine with id: ",routine.id);
     downloadData(true)
     const routineInDevice =  await RoutineService.getRoutineById(routine.id)
-    console.log("search routine done...");
+    savingInDevice(true)
     downloadData(false)
+    saveRoutineInDownloads(routineInDevice!)
+    savingInDevice(false)
+    console.log("search routine done...");
+    
   }
 const styleSheet = StyleSheet.create({
  
