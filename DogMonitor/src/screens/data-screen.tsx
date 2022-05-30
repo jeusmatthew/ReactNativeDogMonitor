@@ -85,7 +85,7 @@ export const DataScreen = ({ navigation }) => {
       />
       </SafeAreaView>
       );
-};
+}; 
 
 const styles = StyleSheet.create({
     safe_area:
