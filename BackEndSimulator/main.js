@@ -3,7 +3,7 @@ const RoutinesArray  = require('./objects/routines');
 var bodyParser = require('body-parser');
 const { response } = require('express');
 const app = express()
-const port = 3000
+const port = 4000
 const NUMBER_OF_SAMPLES =100;
 let deviceName='pechera1'
 app.use(bodyParser.json())

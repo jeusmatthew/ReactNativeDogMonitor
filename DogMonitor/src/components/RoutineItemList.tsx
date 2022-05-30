@@ -43,6 +43,11 @@ import { RoutineService } from '../services/routine-service';
             </View>
           </View>
           {/* <TouchableOpacity style={styleSheet.image_container} onPress={()=>{downloadDataPressed(routine)}}> */}
+          <TouchableOpacity style={styleSheet.image_container} onPress={()=>{
+            //downloadDataPressed(routine,downloadData,savingInDevice)
+            }}>
+            <Image source={require('../../assets/trash.png')} style={styleSheet.download_image}/>
+          </TouchableOpacity>
           <TouchableOpacity style={styleSheet.image_container} onPress={()=>{downloadDataPressed(routine,downloadData,savingInDevice)}}>
             <Image source={require('../../assets/download.png')} style={styleSheet.download_image}/>
           </TouchableOpacity>
