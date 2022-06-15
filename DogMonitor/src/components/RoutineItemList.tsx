@@ -1,4 +1,5 @@
   
+import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import {ToastAndroid, Alert, View, StyleSheet, SafeAreaView, FlatList, Text, TouchableOpacity, Image, ActivityIndicator, PermissionsAndroid } from 'react-native';
 import { Dirs, FileSystem } from 'react-native-file-access';
@@ -25,7 +26,7 @@ import { RoutineService } from '../services/routine-service';
   //     <ActivityIndicator ></ActivityIndicator>
   //   </View>
   // );
-  export const RoutineItem = ({ routine,downloadData,savingInDevice }) => {
+  export const RoutineItem = ({ routine,downloadData,savingInDevice,deletingRoutine,refreshRoutines }) => {
     const [downloadingData,setDownloadingFlag] = useState(false);
 
       return (
@@ -34,17 +35,17 @@ import { RoutineService } from '../services/routine-service';
             <Text style={styleSheet.routine_name}>{routine.name}</Text>
             <Text style={styleSheet.dog_name}>{routine.dog_name}</Text>
             <View style={styleSheet.date_container}>
-              <Text style={styleSheet.dates}>Inicio: </Text>
-              <Text style={styleSheet.dates}>01/01/1999 00:00:00</Text>
+              {/* <Text style={styleSheet.dates}>Creado: </Text> */}
+              <Text style={styleSheet.dates}>{routine.created_at}</Text>
             </View>
-            <View style={styleSheet.date_container}>
+            {/* <View style={styleSheet.date_container}>
               <Text style={styleSheet.dates}>Fin: </Text>
               <Text style={styleSheet.dates}>01/01/1999 23:59:59</Text>
-            </View>
+            </View> */}
           </View>
           {/* <TouchableOpacity style={styleSheet.image_container} onPress={()=>{downloadDataPressed(routine)}}> */}
           <TouchableOpacity style={styleSheet.image_container} onPress={()=>{
-            //downloadDataPressed(routine,downloadData,savingInDevice)
+             deleteRoutine(routine.id,deletingRoutine,refreshRoutines);
             }}>
             <Image source={require('../../assets/trash.png')} style={styleSheet.download_image}/>
           </TouchableOpacity>
@@ -91,7 +92,7 @@ import { RoutineService } from '../services/routine-service';
     try{
       console.log("creating directory");
       const routineAsString = JSON.stringify(routine);
-      const fileName = `${routine.name}_${routine.start_date.toString()}_${routine.end_date.toString()}.json`
+      const fileName = `${routine.name}_${routine.created_at.toString()}.json`
       const path =`${Dirs.DocumentDir}/${fileName}`;
       console.log(`saving in path ${path}...`);
       const text = await FileSystem.writeFile(path,routineAsString,"utf8");
@@ -121,6 +122,20 @@ import { RoutineService } from '../services/routine-service';
     savingInDevice(false)
     console.log("search routine done...");
     
+  }
+
+  const deleteRoutine = async (routine_id:string,deletingRoutine:any,refreshRoutines:any) =>
+  {
+    deletingRoutine(true)
+    const deleted = await RoutineService.deleteRoutineById(routine_id);
+    if(deleted)
+    {
+      refreshRoutines()
+    }else
+    {
+
+    }
+    deletingRoutine(false);
   }
 const styleSheet = StyleSheet.create({
  

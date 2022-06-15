@@ -9,7 +9,7 @@ export namespace RoutineService
     {
         try{
             const routineResponse:AxiosResponse  =await axios.get(`${BASE_URL}/routine`);   
-            return routineResponse.data; 
+            return routineResponse.data.data; 
         }catch(_error)
         {
             console.log("Errro-----------",_error);
@@ -20,7 +20,7 @@ export namespace RoutineService
     {
         try{
             const routineResponse:AxiosResponse  =await axios.get(`${BASE_URL}/routine/${routineId}`);   
-            const routine:Routine =routineResponse.data; 
+            const routine:Routine =routineResponse.data.data; 
             console.log("----------------------------");
             
             return routine
@@ -28,6 +28,19 @@ export namespace RoutineService
         {
             return;
             console.log("Errro-----------",_error);
+        }
+    }
+
+    export const deleteRoutineById = async (routineId:string):Promise<boolean>=>
+    {
+        try{
+            const routineResponse:AxiosResponse  =await axios.delete(`${BASE_URL}/routine/${routineId}`);   
+            const routine:Routine =routineResponse.data.data; 
+            return true
+        }catch(_error)
+        {
+            console.log("Errro-----------",_error);
+            return false;
         }
     }
 

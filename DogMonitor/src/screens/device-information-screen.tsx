@@ -24,12 +24,12 @@ export const DeviceInformationScreen = ({ navigation }) => {
         // code to run on component mount
         async function getDeviceInformation() {
             try{
-                console.log("loading data...");
-                
+                console.log("loading device data...");
                 const device = await DeviceService.getDeviceInformation();
+                console.log("deviceInformation: ",device);
+                console.log("loading device sensros status...");
                 const deviceSensors =  await  DeviceService.getDeviceSensorsInformation();
-                console.log(device);
-                console.log(deviceSensors);
+                console.log("device sensors data:",deviceSensors);
                 console.log("done...");
                 setDeviceName(device.name);
                 setDeviceSensors(deviceSensors);
@@ -128,7 +128,7 @@ export const DeviceInformationScreen = ({ navigation }) => {
                     <View style={styles.device_sensor_row}>
                         
                         {
-                        deviceSensors.imu1 ? (
+                        deviceSensors.imu_tail ? (
                             <><Text style={styles.text}>IMU1</Text><View style={styles.green_tag}><Text style={styles.text_status}>Conectado</Text></View></>
                         ):(
                             <><Text style={styles.text}>IMU1</Text><View style={styles.red_tag}><Text style={styles.text_status}>Desconectado</Text></View></>
@@ -137,7 +137,7 @@ export const DeviceInformationScreen = ({ navigation }) => {
                     </View>
                     <View style={styles.device_sensor_row}>
                         {
-                        deviceSensors.imu2 ? (
+                        deviceSensors.imu_head ? (
                             <><Text style={styles.text}>IMU2</Text><View style={styles.green_tag}><Text style={styles.text_status}>Conectado</Text></View></>
                         ):(
                             <><Text style={styles.text}>IMU2</Text><View style={styles.red_tag}><Text style={styles.text_status}>Desconectado</Text></View></>
@@ -165,7 +165,7 @@ export const DeviceInformationScreen = ({ navigation }) => {
                     </View>
                     <View style={styles.device_sensor_row}>
                         {
-                        deviceSensors.polar ? (
+                        deviceSensors.heart_rate ? (
                             <><Text style={styles.text}>Polar OH1</Text><View style={styles.green_tag}><Text style={styles.text_status}>Conectado</Text></View></>
                         ):(
                             <><Text style={styles.text}>Polar OH1</Text><View style={styles.red_tag}><Text style={styles.text_status}>Desconectado</Text></View></>

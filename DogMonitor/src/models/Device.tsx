@@ -1,14 +1,14 @@
 export interface Device
 {
+    id:number;
     name:string;
 }
 
 export interface DeviceSensors 
 {
-    imu1:boolean;
-    imu2:boolean;
-    temperature:boolean;
+    heart_rate:boolean;
+    imu_tail:boolean;
+    imu_head:boolean;
     microphone:boolean;
-    polar:boolean;
-
+    temperature:boolean;
 }

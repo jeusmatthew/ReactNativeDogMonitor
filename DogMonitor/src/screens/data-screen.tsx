@@ -12,14 +12,22 @@ export const DataScreen = ({ navigation }) => {
   const [downloadingRoutine,setDownloadingRoutine] = useState(false)
   const [savingRoutine,setSavingRoutine] = useState(false)
   const [modalVisibility,setModalVisibility] = useState(false)
+  const [deletingRoutine,setDeleteingRoutine] = useState(false);
+
+  async function getRoutines() {
+    console.log("loading routines...");
+    const routinesList:Routine[] = await RoutineService.listRoutines();
+    setRoutines(routinesList);
+    console.log("routines: ",routines);
+  }
   useEffect( () => {
     // code to run on component mount
-    async function getRoutines() {
-      console.log("loading routines...");
-      const routinesList:Routine[] = await RoutineService.listRoutines();
-      setRoutines(routinesList);
-      console.log("routines: ",routines);
-    }
+    // async function getRoutines() {
+    //   console.log("loading routines...");
+    //   const routinesList:Routine[] = await RoutineService.listRoutines();
+    //   setRoutines(routinesList);
+    //   console.log("routines: ",routines);
+    // }
     getRoutines();
     },[])
     return (
@@ -72,6 +80,29 @@ export const DataScreen = ({ navigation }) => {
                 </TouchableWithoutFeedback>
             </View>
         </Modal>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={deletingRoutine}
+          onRequestClose={() => {
+            //Alert.alert("Modal has been closed.");
+            setModalVisibility(false);
+            console.log("close  modal...");
+          }}
+          >  
+            <View style={styles.modal_container}>
+                <TouchableWithoutFeedback>
+                 <View style={styles.modal_card_container}>
+                        <ActivityIndicator  ></ActivityIndicator>
+                        { deletingRoutine ? (<Text style={styles.text_downloading_data} >Eliminando rutina...</Text>):null}
+                </View>
+                </TouchableWithoutFeedback>
+            </View>
+        </Modal>
+
+
+
         <View style ={styles.text_input_view}>
           <TextInput style = {styles.text_input} placeholder="Nombre de la mascota"/>
           <TouchableOpacity onPress={()=>{console.log("Searching routines...");}}>
@@ -81,7 +112,10 @@ export const DataScreen = ({ navigation }) => {
         <FlatList
         style={{marginLeft:10,marginRight:10}}
         data={routines}
-        renderItem={({item}) => <RoutineItem routine={item} downloadData={(value:boolean)=>{setDownloadingRoutine(value)}} savingInDevice={(value:boolean)=>{setSavingRoutine(value)}}/>}
+        renderItem={({item}) => <RoutineItem routine={item} downloadData={(value:boolean)=>{setDownloadingRoutine(value)}} savingInDevice={(value:boolean)=>{setSavingRoutine(value)}}
+        deletingRoutine={(value:boolean)=>{setSavingRoutine(value)}}
+        refreshRoutines ={()=>{getRoutines()}}
+        />}
       />
       </SafeAreaView>
       );

@@ -1,5 +1,5 @@
 
-export const BASE_URL ="http://7a9192b1f962.ngrok.io";
+export const BASE_URL ="http://192.168.1.89:3000";
 export const MAX_ROUTINE_TIME=15
 export enum Titles 
 {
