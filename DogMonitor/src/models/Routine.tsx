@@ -1,10 +1,10 @@
 import { HeartRate,Audio,Imu,Temperature } from "./index";
 
 export interface Routine {
-    id:string;
+    id?:string;
     name:string;
-    created_at:Date;
-    updated_at:Date;
+    created_at?:Date;
+    updated_at?:Date;
     dog_name:string;
     imu_tail?:Imu[];
     imu_head?:Imu[];

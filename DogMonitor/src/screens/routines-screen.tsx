@@ -1,16 +1,48 @@
 import React,{ useState }  from 'react';
-import { Button, SafeAreaView, StyleSheet, Text, TextInput,Check, TouchableOpacity, View } from 'react-native';
+import { Button, SafeAreaView, StyleSheet, Text, TextInput,Check, TouchableOpacity, View, ToastAndroid, TouchableWithoutFeedback, ActivityIndicator, Modal } from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { RoutineService } from '../services/routine-service';
 
 export const RoutinesScreen = ({ navigation }) => {
   const [minutesEnabled,setMinutesEnabled] = useState(false);
   let [minutes,setMinutes] =useState('0');
+  let [routineNameInput,setRoutineNameInput] = useState("");
+  let [dogNameInput,setDogNameInput] = useState("");
+  let [startingRoutine,setStartingRoutine] = useState(false);
+  const [startingRoutineModalVisibility,setStartingRoutineModalVisibility] = useState(false)
     return (
       <SafeAreaView style={styles.safe_area}>
+                  <Modal
+          animationType="slide"
+          transparent={true}
+          visible={startingRoutine}
+          onRequestClose={() => {
+            //Alert.alert("Modal has been closed.");
+            setStartingRoutineModalVisibility(false);
+            console.log("close  modal...");
+            
+          }}
+        >
+            
+            <View style={styles.modal_container}>
+                <TouchableWithoutFeedback>
+                 <View style={styles.modal_card_container}>
+                        <ActivityIndicator  ></ActivityIndicator>
+                        { startingRoutine ? (<Text style={styles.text_starting_routine_data} >Iniciando rutina...</Text>):null}
+                </View>
+                </TouchableWithoutFeedback>
+            </View>
+        </Modal>
         <Text style={styles.text}>Nombre de rutina</Text>
-        <TextInput style={styles.text_input } placeholder="Nombre de la rutina"/>
+        <TextInput style={styles.text_input } placeholder="Nombre de la rutina"
+         onChangeText={(text)=>{
+          setRoutineNameInput(text)
+      }}
+        />
         <Text style={styles.text}>Nombre del perro</Text>
-        <TextInput style={styles.text_input } placeholder="Nombre del perro"/>
+        <TextInput style={styles.text_input } placeholder="Nombre del perro"  onChangeText={(text)=>{
+                            setDogNameInput(text)
+                        }}/>
         <BouncyCheckbox
           size={25}
           fillColor="#60ADB7"
@@ -40,14 +72,31 @@ export const RoutinesScreen = ({ navigation }) => {
             <TouchableOpacity
                     style={styles.button_green}
                     onPress={async () => {
+                      setStartingRoutine(true);
+                      startRoutine(dogNameInput,routineNameInput);
+                      setStartingRoutine(false);
                       
             }}>
-              <Text style={{color: '#FFFFFF'}}>Iniciar</Text>
+              <Text style={{color: '#FFFFFF'}}>Iniciar </Text>
             </TouchableOpacity>
         </View>
       </SafeAreaView>
       );
 };
+
+const startRoutine = async (dogName:string,routineName:string)=>
+{
+  const createdRoutine = await RoutineService.createRoutine({
+    dog_name:dogName,
+    name:routineName
+  })
+  if(!createdRoutine)
+  {
+    ToastAndroid.show('Hubo un problema al iniciar la rutina', ToastAndroid.SHORT);
+    return;
+  }
+  ToastAndroid.show('Rutina creada con éxito', ToastAndroid.SHORT);
+}
 
 const styles = StyleSheet.create({
   device_name:{
@@ -135,6 +184,27 @@ const styles = StyleSheet.create({
       justifyContent:'space-between',
       marginLeft:30,
       marginRight:30
+    },
+    modal_container:
+    {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    modal_card_container:
+    {
+        backgroundColor:"#ffffff",
+        width: 300,
+        height: 250,
+        justifyContent:'center',
+        alignItems:'center'
+        
+    },
+    text_starting_routine_data:
+    {
+      marginTop:10
+      
     }
 
   });
