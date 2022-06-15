@@ -9,6 +9,8 @@ export const RoutinesScreen = ({ navigation }) => {
   let [routineNameInput,setRoutineNameInput] = useState("");
   let [dogNameInput,setDogNameInput] = useState("");
   let [startingRoutine,setStartingRoutine] = useState(false);
+  const routineNameInputElement = React.useRef();
+  const dogNameInputElement = React.useRef()
   const [startingRoutineModalVisibility,setStartingRoutineModalVisibility] = useState(false)
     return (
       <SafeAreaView style={styles.safe_area}>
@@ -34,16 +36,16 @@ export const RoutinesScreen = ({ navigation }) => {
             </View>
         </Modal>
         <Text style={styles.text}>Nombre de rutina</Text>
-        <TextInput style={styles.text_input } placeholder="Nombre de la rutina"
+        <TextInput ref = {routineNameInputElement} style={styles.text_input } placeholder="Nombre de la rutina"
          onChangeText={(text)=>{
           setRoutineNameInput(text)
       }}
         />
         <Text style={styles.text}>Nombre del perro</Text>
-        <TextInput style={styles.text_input } placeholder="Nombre del perro"  onChangeText={(text)=>{
+        <TextInput ref={dogNameInputElement } style={styles.text_input } placeholder="Nombre del perro"  onChangeText={(text)=>{
                             setDogNameInput(text)
                         }}/>
-        <BouncyCheckbox
+        {/* <BouncyCheckbox
           size={25}
           fillColor="#60ADB7"
           unfillColor="#FFFFFF"
@@ -52,7 +54,7 @@ export const RoutinesScreen = ({ navigation }) => {
           textStyle={{ fontFamily: "JosefinSans-Regular" }}
           onPress={(isChecked: boolean) => {setMinutesEnabled(isChecked)}}
           style={{marginBottom:10}}
-        />
+        /> */}
         {
           minutesEnabled ? (<View>
           <Text style={styles.text}>Tiempo</Text>
@@ -72,8 +74,20 @@ export const RoutinesScreen = ({ navigation }) => {
             <TouchableOpacity
                     style={styles.button_green}
                     onPress={async () => {
+                      if(dogNameInput == null || dogNameInput == "" || routineNameInput == null || routineNameInput==""){
+                        ToastAndroid.show('El nombre de la rutina y de la mascota son obligatorios', ToastAndroid.SHORT);
+                        return;
+                      }
                       setStartingRoutine(true);
-                      startRoutine(dogNameInput,routineNameInput);
+                      const routineCreated = await startRoutine(dogNameInput,routineNameInput);
+                      if(routineCreated)
+                      {
+                        console.log("crear fields...");
+                        setRoutineNameInput("");
+                        setDogNameInput("");
+                        dogNameInputElement.current.clear();
+                        routineNameInputElement.current.clear();
+                      }
                       setStartingRoutine(false);
                       
             }}>
@@ -84,7 +98,7 @@ export const RoutinesScreen = ({ navigation }) => {
       );
 };
 
-const startRoutine = async (dogName:string,routineName:string)=>
+const startRoutine = async (dogName:string,routineName:string):Promise<boolean>=>
 {
   const createdRoutine = await RoutineService.createRoutine({
     dog_name:dogName,
@@ -93,9 +107,10 @@ const startRoutine = async (dogName:string,routineName:string)=>
   if(!createdRoutine)
   {
     ToastAndroid.show('Hubo un problema al iniciar la rutina', ToastAndroid.SHORT);
-    return;
+    return false;
   }
   ToastAndroid.show('Rutina creada con éxito', ToastAndroid.SHORT);
+  return true;
 }
 
 const styles = StyleSheet.create({

@@ -12,14 +12,18 @@ export const DataScreen = ({ navigation }) => {
   const [downloadingRoutine,setDownloadingRoutine] = useState(false)
   const [savingRoutine,setSavingRoutine] = useState(false)
   const [modalVisibility,setModalVisibility] = useState(false)
+  const [deleteModalVisibility,setDeleteModalVisibility] = useState(false)
   const [deletingRoutine,setDeleteingRoutine] = useState(false);
   const [searchText,setSearchText] = useState("");
+  const [refreshingRoutines,setRefreshingRoutines] = useState(false)
 
   async function getRoutines(searchInput?:string) {
+    setRefreshingRoutines(true)
     console.log("loading routines...");
     const routinesList:Routine[] = await RoutineService.listRoutines(searchInput);
     setRoutines(routinesList);
     console.log("routines: ",routines);
+    setRefreshingRoutines(false)
   }
   useEffect( () => {
     // code to run on component mount
@@ -88,7 +92,7 @@ export const DataScreen = ({ navigation }) => {
           visible={deletingRoutine}
           onRequestClose={() => {
             //Alert.alert("Modal has been closed.");
-            setModalVisibility(false);
+            setDeleteModalVisibility(false);
             console.log("close  modal...");
           }}
           >  
@@ -113,10 +117,12 @@ export const DataScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <FlatList
+        refreshing={refreshingRoutines}
+        onRefresh={()=>getRoutines()}
         style={{marginLeft:10,marginRight:10}}
         data={routines}
         renderItem={({item}) => <RoutineItem routine={item} downloadData={(value:boolean)=>{setDownloadingRoutine(value)}} savingInDevice={(value:boolean)=>{setSavingRoutine(value)}}
-        deletingRoutine={(value:boolean)=>{setSavingRoutine(value)}}
+        deletingRoutine={(value:boolean)=>{setDeleteingRoutine(value)}}
         refreshRoutines ={()=>{getRoutines()}}
         />}
       />
