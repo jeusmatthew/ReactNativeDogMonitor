@@ -13,10 +13,11 @@ export const DataScreen = ({ navigation }) => {
   const [savingRoutine,setSavingRoutine] = useState(false)
   const [modalVisibility,setModalVisibility] = useState(false)
   const [deletingRoutine,setDeleteingRoutine] = useState(false);
+  const [searchText,setSearchText] = useState("");
 
-  async function getRoutines() {
+  async function getRoutines(searchInput?:string) {
     console.log("loading routines...");
-    const routinesList:Routine[] = await RoutineService.listRoutines();
+    const routinesList:Routine[] = await RoutineService.listRoutines(searchInput);
     setRoutines(routinesList);
     console.log("routines: ",routines);
   }
@@ -104,8 +105,10 @@ export const DataScreen = ({ navigation }) => {
 
 
         <View style ={styles.text_input_view}>
-          <TextInput style = {styles.text_input} placeholder="Nombre de la mascota"/>
-          <TouchableOpacity onPress={()=>{console.log("Searching routines...");}}>
+          <TextInput style = {styles.text_input} placeholder="Nombre de la mascota"  onChangeText={(text)=>{
+                            setSearchText(text)
+          }}/>
+          <TouchableOpacity onPress={()=>{ getRoutines(searchText)}}>
           <Image source={require('../../assets/search.png')} style={styles.search_icon} />
           </TouchableOpacity>
         </View>

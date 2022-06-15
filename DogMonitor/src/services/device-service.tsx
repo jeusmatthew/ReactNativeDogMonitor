@@ -20,10 +20,8 @@ export namespace DeviceService
 
     export const updateDeviceInformation = async (input:any):Promise<Device>=>
     {
-        console.log("Ima going to update...");
         const deviceResponse:AxiosResponse  =await axios.put(`${BASE_URL}/device`,input);   
-        const deviceData:Device = deviceResponse.data.data;
-        console.log("updated...",deviceData);
+        const deviceData:Device = deviceResponse.data.data;   
         return deviceData; 
     }
 

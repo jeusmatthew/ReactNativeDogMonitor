@@ -5,10 +5,15 @@ import { Routine } from '../models';
 
 export namespace RoutineService
 {
-    export const listRoutines = async ()=>
+    export const listRoutines = async (search?:string)=>
     {
         try{
-            const routineResponse:AxiosResponse  =await axios.get(`${BASE_URL}/routine`);   
+            let url = `${BASE_URL}/routine`
+            if(search)
+            {
+                url = url+'?search='+search;
+            }
+            const routineResponse:AxiosResponse  =await axios.get(url);   
             return routineResponse.data.data; 
         }catch(_error)
         {
