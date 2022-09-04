@@ -8,13 +8,13 @@ export namespace RoutineService
     export const listRoutines = async (search?:string)=>
     {
         try{
-            let url = `${BASE_URL}/routine`
+            let url = `${BASE_URL}/api/services/routine/list`
             if(search)
             {
                 url = url+'?search='+search;
             }
             const routineResponse:AxiosResponse  =await axios.get(url);   
-            return routineResponse.data.data; 
+            return routineResponse.data; 
         }catch(_error)
         {
             console.log("Errro-----------",_error);
@@ -24,8 +24,8 @@ export namespace RoutineService
     export const getRoutineById = async (routineId:string):Promise<Routine | undefined>=>
     {
         try{
-            const routineResponse:AxiosResponse  =await axios.get(`${BASE_URL}/routine/${routineId}`);   
-            const routine:Routine =routineResponse.data.data; 
+            const routineResponse:AxiosResponse  =await axios.get(`${BASE_URL}api/services/routine/${routineId}`);   
+            const routine:Routine =routineResponse.data; 
             console.log("----------------------------");
             
             return routine
@@ -39,8 +39,8 @@ export namespace RoutineService
     export const deleteRoutineById = async (routineId:string):Promise<boolean>=>
     {
         try{
-            const routineResponse:AxiosResponse  =await axios.delete(`${BASE_URL}/routine/${routineId}`);   
-            const routine:Routine =routineResponse.data.data; 
+            const routineResponse:AxiosResponse  =await axios.delete(`${BASE_URL}/api/services/routine/${routineId}/delete`);   
+            const routine:Routine =routineResponse.data; 
             return true
         }catch(_error)
         {
@@ -52,8 +52,8 @@ export namespace RoutineService
     export const createRoutine =async (input:Routine):Promise<Routine | undefined>=>
     {
         try{
-            const routineResponse:AxiosResponse  =await axios.post(`${BASE_URL}/routine`,input);   
-            const routine:Routine =routineResponse.data.data; 
+            const routineResponse:AxiosResponse  =await axios.post(`${BASE_URL}/api/services/routine`,input);   
+            const routine:Routine =routineResponse.data; 
             return routine
         }catch(_error)
         {
