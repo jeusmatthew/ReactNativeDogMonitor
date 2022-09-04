@@ -63,4 +63,18 @@ export namespace RoutineService
         }
     }
 
+    
+    export const stopRoutine =async ():Promise<Routine | undefined>=>
+    {
+        try{
+            const routineResponse:AxiosResponse  =await axios.post(`${BASE_URL}/api/services/routine/stop`,{});   
+            const routine:Routine =routineResponse.data; 
+            return routine
+        }catch(_error)
+        {
+            console.log("Errro-----------",_error);
+            return;
+        }
+    }
+
 }
