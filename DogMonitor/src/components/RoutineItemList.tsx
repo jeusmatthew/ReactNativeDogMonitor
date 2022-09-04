@@ -92,7 +92,8 @@ import { RoutineService } from '../services/routine-service';
     try{
       console.log("creating directory");
       const routineAsString = JSON.stringify(routine);
-      const fileName = `${routine.name}_${routine.created_at!.toString()}.json`
+      //const fileName = `${routine.name}_${routine.created_at!.toString()}.json`
+      const fileName = `${routine.name}.json`
       const path =`${Dirs.DocumentDir}/${fileName}`;
       console.log(`saving in path ${path}...`);
       const text = await FileSystem.writeFile(path,routineAsString,"utf8");

@@ -24,15 +24,16 @@ export namespace RoutineService
     export const getRoutineById = async (routineId:string):Promise<Routine | undefined>=>
     {
         try{
-            const routineResponse:AxiosResponse  =await axios.get(`${BASE_URL}api/services/routine/${routineId}`);   
+            const routineResponse:AxiosResponse  =await axios.get(`${BASE_URL}/api/services/routine/${routineId}`);   
             const routine:Routine =routineResponse.data; 
             console.log("----------------------------");
             
             return routine
         }catch(_error)
         {
-            return;
+            
             console.log("Errro-----------",_error);
+            return;
         }
     }
 

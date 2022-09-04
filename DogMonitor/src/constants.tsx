@@ -1,5 +1,5 @@
 
-export const BASE_URL ="http://192.168.1.82:8000";
+export const BASE_URL ="http://192.168.1.77:8000";
 export const MAX_ROUTINE_TIME=15
 export enum Titles 
 {
