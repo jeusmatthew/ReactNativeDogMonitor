@@ -2,6 +2,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { BASE_URL } from '../constants';
 import { Routine } from '../models';
+import { StopRoutineResponse } from '../models/Routine';
 
 export namespace RoutineService
 {
@@ -64,11 +65,11 @@ export namespace RoutineService
     }
 
     
-    export const stopRoutine =async ():Promise<Routine | undefined>=>
+    export const stopRoutine =async ():Promise<StopRoutineResponse | undefined>=>
     {
         try{
             const routineResponse:AxiosResponse  =await axios.post(`${BASE_URL}/api/services/routine/stop`,{});   
-            const routine:Routine =routineResponse.data; 
+            const routine:StopRoutineResponse =routineResponse.data; 
             return routine
         }catch(_error)
         {
