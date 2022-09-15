@@ -15,7 +15,7 @@ export namespace HelathService
         {
             console.log("Error getting Health");
             console.log(_error);
-            console.log(error.response);
+            console.log(_error.response);
             return false;   
         }
     }
