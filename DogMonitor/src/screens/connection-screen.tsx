@@ -45,7 +45,7 @@ import { HelathService } from '../services';
           testingHealth: true,
         });
         let connected = await HelathService.testHelath();
-        connected=true;
+        //connected=true;
         if (connected) {
           this.props.navigation.dispatch(StackActions.replace('Home'));
         } else {

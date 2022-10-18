@@ -67,6 +67,16 @@ export const RoutinesScreen = ({ navigation }) => {
             <TouchableOpacity
                     style={styles.button_red}
                     onPress={async () => {
+                      ToastAndroid.show('Deteniendo rutina...', ToastAndroid.SHORT);
+                      const stopRoutineResponse = await RoutineService.stopRoutine();
+                      if(stopRoutineResponse?.success)
+                      {
+                        ToastAndroid.show('Rutina finalizada', ToastAndroid.SHORT);
+                      }else{
+                        ToastAndroid.show('La rutina no pudo ser detenida o no hay rutinas corriendo', ToastAndroid.SHORT);
+                      }
+                      console.log("stop routine");
+                    
                       
             }}>
               <Text style={{color: '#FFFFFF'}}>Finalizar</Text>

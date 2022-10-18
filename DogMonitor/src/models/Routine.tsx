@@ -13,3 +13,9 @@ export interface Routine {
     audio?:Audio[];
 
 }
+
+export interface StopRoutineResponse 
+{
+    success:boolean;
+
+}
