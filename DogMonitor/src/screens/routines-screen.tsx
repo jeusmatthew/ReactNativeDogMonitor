@@ -119,6 +119,12 @@ const startRoutine = async (dogName:string,routineName:string):Promise<boolean>=
     ToastAndroid.show('Hubo un problema al iniciar la rutina', ToastAndroid.SHORT);
     return false;
   }
+  if(typeof createdRoutine == 'string')
+  {
+    ToastAndroid.show(createdRoutine, ToastAndroid.SHORT);
+    return false;
+
+  }
   ToastAndroid.show('Rutina creada con éxito', ToastAndroid.SHORT);
   return true;
 }

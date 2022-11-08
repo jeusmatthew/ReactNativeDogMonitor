@@ -51,7 +51,7 @@ export namespace RoutineService
         }
     }
 
-    export const createRoutine =async (input:Routine):Promise<Routine | undefined>=>
+    export const createRoutine =async (input:Routine):Promise<Routine | string>=>
     {
         try{
             const routineResponse:AxiosResponse  =await axios.post(`${BASE_URL}/api/services/routine`,input);   
@@ -60,7 +60,9 @@ export namespace RoutineService
         }catch(_error)
         {
             console.log("Errro-----------",_error);
-            return;
+            console.log(_error.response.data.message);
+            
+            return _error.response.data.message;
         }
     }
 
