@@ -38,6 +38,21 @@ export namespace RoutineService
         }
     }
 
+    export const getAudioFile = async (audioName:string):Promise<any>=>
+    {
+        try{
+            const routineResponse:AxiosResponse  =await axios.get(`${BASE_URL}/dogMonitorFirmware/static/${audioName}`);   
+            const audio =routineResponse.data; 
+            return audio;
+            console.log("Audio----------------------------",routineResponse.data);
+        }catch(_error)
+        {
+            
+            console.log("Errro-----------",_error);
+            return;
+        }
+    }
+
     export const deleteRoutineById = async (routineId:string):Promise<boolean>=>
     {
         try{

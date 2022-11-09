@@ -92,18 +92,72 @@ import { RoutineService } from '../services/routine-service';
     try{
       console.log("creating directory");
       const routineAsString = JSON.stringify(routine);
+      console.log(routineAsString);
+      
       //const fileName = `${routine.name}_${routine.created_at!.toString()}.json`
       const fileName = `${routine.name}.json`
       const path =`${Dirs.DocumentDir}/${fileName}`;
       console.log(`saving in path ${path}...`);
+      console.log("verify if file exist -------------------------");
+      try{
+        console.log("try to unlink");
+        
+        await FileSystem.unlink(path)
+      }
+      catch(_error){
+        console.log("unlink error");
+        
+        console.log(_error);
+        
+      }
+      
+      if (await FileSystem.exists(path)){ 
+        console.log("file exist");
+      }else{
+        console.log("file not exist");
+        
+      }
+      console.log("writing file");
       const text = await FileSystem.writeFile(path,routineAsString,"utf8");
-      if (!FileSystem.exists(path)) return;// check to see if our filePath was created
-      await FileSystem.cpExternal(path,fileName,'downloads');// copies our file to the downloads folder/directory
+      console.log("text: ",text);
+      
+      if (!await FileSystem.exists(path)){ 
+        console.log("file not exist");
+        return;
+      }else{
+        console.log("file write success");
+        
+      }// check to see if our filePath was created
+      console.log("start copy in downloads from ",path);
+      await FileSystem.cpExternal(path,"__"+fileName,'downloads');// copies our file to the downloads folder/directory
       ToastAndroid.show('Se han descargado los datos correctamente', ToastAndroid.SHORT);
     }catch(e)
     {
       console.log(e);
       ToastAndroid.show('Error escribiendo en el almacenamiento interno', ToastAndroid.SHORT);
+    }
+    
+  }
+
+  const saveAudioInDownloads = async (audioData:any,audioName:string)=>
+  {
+    try{
+      console.log("creating directory");
+      const fileName = audioName;
+      const path =`${Dirs.DocumentDir}/${fileName}`;
+      console.log(`saving in path ${path}...`);
+      console.log("saving audio as utf8");
+      
+      const text = await FileSystem.writeFile(path,audioData,"base64");
+      if (!FileSystem.exists(path)){ 
+        return;
+      }// check to see if our filePath was created
+      await FileSystem.cpExternal(path,fileName,'downloads');// copies our file to the downloads folder/directory
+      ToastAndroid.show('Se han descargado el audio correctamente', ToastAndroid.SHORT);
+    }catch(e)
+    {
+      console.log(e);
+      ToastAndroid.show('Error escribiendo el audio en el almacenamiento interno', ToastAndroid.SHORT);
     }
     
   }
@@ -116,10 +170,12 @@ import { RoutineService } from '../services/routine-service';
     }
     console.log("seachig routine with id: ",routine.id);
     downloadData(true)
-    const routineInDevice =  await RoutineService.getRoutineById(routine.id)
+    const routineInDevice =  await RoutineService.getRoutineById(routine.id);
+    const audioFile = await RoutineService.getAudioFile("static_file_test.jpg")
     savingInDevice(true)
     downloadData(false)
-    saveRoutineInDownloads(routineInDevice!)
+    await saveRoutineInDownloads(routineInDevice!)
+    //await saveAudioInDownloads(audioFile,"static_file_test.jpg")
     savingInDevice(false)
     console.log("search routine done...");
     
