@@ -129,7 +129,12 @@ import { RoutineService } from '../services/routine-service';
         
       }// check to see if our filePath was created
       console.log("start copy in downloads from ",path);
-      await FileSystem.cpExternal(path,"__"+fileName,'downloads');// copies our file to the downloads folder/directory
+      const sdDir =Dirs.MainBundleDir!
+      console.log("sdDirs: ",sdDir);
+      const lsResult =await FileSystem.ls(sdDir);
+      console.log("ls result:",lsResult);
+      
+      await FileSystem.cpExternal(path,fileName,'downloads');// copies our file to the downloads folder/directory
       ToastAndroid.show('Se han descargado los datos correctamente', ToastAndroid.SHORT);
     }catch(e)
     {
