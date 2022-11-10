@@ -93,47 +93,30 @@ import { RoutineService } from '../services/routine-service';
       console.log("creating directory");
       const routineAsString = JSON.stringify(routine);
       console.log(routineAsString);
+      console.log("creating date...");
+      const currentDate = new Date();
+      let currentDateString =  (currentDate.toLocaleDateString() +" "+ currentDate.toLocaleTimeString())+"."+currentDate.getMilliseconds()
+      currentDateString = currentDateString.replace("/","-")
+      currentDateString = currentDateString.replace("/","-")
+      console.log("current date: ",currentDateString);
+      const fileName = `${routine.name}_${currentDateString}.json`
+      console.log("file name: ",fileName);
       
-      //const fileName = `${routine.name}_${routine.created_at!.toString()}.json`
-      const fileName = `${routine.name}.json`
       const path =`${Dirs.DocumentDir}/${fileName}`;
       console.log(`saving in path ${path}...`);
-      console.log("verify if file exist -------------------------");
-      try{
-        console.log("try to unlink");
-        
-        await FileSystem.unlink(path)
-      }
-      catch(_error){
-        console.log("unlink error");
-        
-        console.log(_error);
-        
-      }
-      
       if (await FileSystem.exists(path)){ 
         console.log("file exist");
       }else{
         console.log("file not exist");
         
       }
-      console.log("writing file");
       const text = await FileSystem.writeFile(path,routineAsString,"utf8");
-      console.log("text: ",text);
-      
       if (!await FileSystem.exists(path)){ 
         console.log("file not exist");
         return;
       }else{
         console.log("file write success");
-        
       }// check to see if our filePath was created
-      console.log("start copy in downloads from ",path);
-      const sdDir =Dirs.MainBundleDir!
-      console.log("sdDirs: ",sdDir);
-      const lsResult =await FileSystem.ls(sdDir);
-      console.log("ls result:",lsResult);
-      
       await FileSystem.cpExternal(path,fileName,'downloads');// copies our file to the downloads folder/directory
       ToastAndroid.show('Se han descargado los datos correctamente', ToastAndroid.SHORT);
     }catch(e)
