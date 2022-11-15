@@ -3,6 +3,8 @@ import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import {ToastAndroid, Alert, View, StyleSheet, SafeAreaView, FlatList, Text, TouchableOpacity, Image, ActivityIndicator, PermissionsAndroid } from 'react-native';
 import { Dirs, FileSystem } from 'react-native-file-access';
+import { CSVHelper } from '../helpers';
+import { FileSystemHelper } from '../helpers/file-system-helper';
 import { Routine } from '../models';
 import { RoutineService } from '../services/routine-service';
 
@@ -89,41 +91,51 @@ import { RoutineService } from '../services/routine-service';
   }
   const saveRoutineInDownloads = async (routine:Routine)=>
   {
-    try{
-      console.log("creating directory");
-      const routineAsString = JSON.stringify(routine);
-      console.log(routineAsString);
-      console.log("creating date...");
-      const currentDate = new Date();
-      let currentDateString =  (currentDate.toLocaleDateString() +" "+ currentDate.toLocaleTimeString())+"."+currentDate.getMilliseconds()
-      currentDateString = currentDateString.replace("/","-")
-      currentDateString = currentDateString.replace("/","-")
-      console.log("current date: ",currentDateString);
-      const fileName = `${routine.name}_${currentDateString}.json`
-      console.log("file name: ",fileName);
+    // try{
+    //   console.log("creating directory");
+    //   const routineAsString = JSON.stringify(routine);
+    //   const routineAsCsv = CSVHelper.converImuDataInCsv(routine.imu)
+    //   console.log(routineAsString);
+    //   console.log("creating date...");
+    //   const currentDate = new Date();
+    //   let currentDateString =  (currentDate.toLocaleDateString() +" "+ currentDate.toLocaleTimeString())+"."+currentDate.getMilliseconds()
+    //   currentDateString = currentDateString.replace("/","-")
+    //   currentDateString = currentDateString.replace("/","-")
+    //   console.log("current date: ",currentDateString);
+    //   const fileName = `${routine.name}_${currentDateString}.json`
+    //   console.log("file name: ",fileName);
       
-      const path =`${Dirs.DocumentDir}/${fileName}`;
-      console.log(`saving in path ${path}...`);
-      if (await FileSystem.exists(path)){ 
-        console.log("file exist");
-      }else{
-        console.log("file not exist");
+    //   const path =`${Dirs.DocumentDir}/${fileName}`;
+    //   console.log(`saving in path ${path}...`);
+    //   if (await FileSystem.exists(path)){ 
+    //     console.log("file exist");
+    //   }else{
+    //     console.log("file not exist");
         
-      }
-      const text = await FileSystem.writeFile(path,routineAsString,"utf8");
-      if (!await FileSystem.exists(path)){ 
-        console.log("file not exist");
-        return;
-      }else{
-        console.log("file write success");
-      }// check to see if our filePath was created
-      await FileSystem.cpExternal(path,fileName,'downloads');// copies our file to the downloads folder/directory
-      ToastAndroid.show('Se han descargado los datos correctamente', ToastAndroid.SHORT);
-    }catch(e)
-    {
-      console.log(e);
-      ToastAndroid.show('Error escribiendo en el almacenamiento interno', ToastAndroid.SHORT);
-    }
+    //   }
+    //   const text = await FileSystem.writeFile(path,routineAsString,"utf8");
+    //   if (!await FileSystem.exists(path)){ 
+    //     console.log("file not exist");
+    //     return;
+    //   }else{
+    //     console.log("file write success");
+    //   }// check to see if our filePath was created
+    //   await FileSystem.cpExternal(path,fileName,'downloads');// copies our file to the downloads folder/directory
+    //   ToastAndroid.show('Se han descargado los datos correctamente', ToastAndroid.SHORT);
+    // }catch(e)
+    // {
+    //   console.log(e);
+    //   ToastAndroid.show('Error escribiendo en el almacenamiento interno', ToastAndroid.SHORT);
+    // }
+    const routineAsString = JSON.stringify(routine);
+    const routineAsCsv = await CSVHelper.converImuDataInCsv(routine.imu);
+    const folderName = FileSystemHelper.computeFolderName(routine.name);
+    const folderPath = `${Dirs.DocumentDir}/${folderName}/`;
+    await FileSystemHelper.createPrivateFolder(folderPath);
+    console.log("folder name: ",folderName);
+    const jsonFileName =await FileSystemHelper.writeFileInPrivateFolder(routineAsString,"imu.json",folderPath);
+    const csvFileName = await FileSystemHelper.writeFileInPrivateFolder(routineAsCsv,"imu.csv",folderPath);
+    await FileSystemHelper.copyRoutineFolder(folderPath,folderName)
     
   }
 

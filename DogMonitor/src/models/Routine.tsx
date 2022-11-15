@@ -7,6 +7,7 @@ export interface Routine {
     updated_at?:Date;
     dog_name:string;
     imu_tail?:Imu[];
+    imu?:Imu[];
     imu_head?:Imu[];
     temperature?:Temperature[];
     heart_rate?:HeartRate[];
