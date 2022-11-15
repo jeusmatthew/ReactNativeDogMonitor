@@ -5,7 +5,7 @@ export namespace CSVHelper {
     export const converImuDataInCsv = async (input:any) =>
     {
         const results = jsonToCSV(input);
-        console.log(results);
+        //console.log(results);
         return results;
         
     }

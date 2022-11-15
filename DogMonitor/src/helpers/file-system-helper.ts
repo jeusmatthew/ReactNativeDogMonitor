@@ -1,5 +1,9 @@
 import { ToastAndroid } from 'react-native';
 import { Dirs, FileSystem } from 'react-native-file-access';
+import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive'
+import { MainBundlePath, DocumentDirectoryPath } from 'react-native-fs'
+
+
 
 export namespace FileSystemHelper{
     export const writeFileInDownloads =async  (data:string,fileName:string,extension:string):Promise<boolean>=>
@@ -33,13 +37,13 @@ export namespace FileSystemHelper{
           }
     }
 
-    export const writeFileInPrivateFolder =async  (data:string,fileName:string,folderPath:string):Promise<boolean>=>
+    export const writeFileInPrivateFolder =async  (data:string,fileName:string):Promise<boolean>=>
     {
         try{
            
             const fileNameWithExtension =fileName;
             console.log("file name: ",fileNameWithExtension);
-            const path =`${folderPath}${fileNameWithExtension}`;
+            const path =`${Dirs.DocumentDir}/filesToSave/${fileNameWithExtension}`;
             console.log(`saving in path ${path}...`);
             await FileSystem.writeFile(path,data,"utf8");
             if (!await FileSystem.exists(path)){ 
@@ -59,13 +63,22 @@ export namespace FileSystemHelper{
           }
     }
 
-    export const computeFolderName =  (name:string):string =>{
+    export const computeZipName =  (name:string):string =>{
         const currentDate = new Date();
         let currentDateString =  (currentDate.toLocaleDateString() +" "+ currentDate.toLocaleTimeString())+"."+currentDate.getMilliseconds()
         currentDateString = currentDateString.replace("/","-")
         currentDateString = currentDateString.replace("/","-")
         console.log("current date: ",currentDateString);
-        return name+"_"+currentDateString;
+        return name+"_"+currentDateString+".zip";
+    }
+
+    export const computeUniqueName =  (fileName:string,extension:string):string =>{
+        const currentDate = new Date();
+        let currentDateString =  (currentDate.toLocaleDateString() +" "+ currentDate.toLocaleTimeString())+"."+currentDate.getMilliseconds()
+        currentDateString = currentDateString.replace("/","-")
+        currentDateString = currentDateString.replace("/","-")
+        console.log("current date: ",currentDateString);
+        return fileName+"_"+currentDateString+"."+extension;
     }
 
     export const copyRoutineFolder =async  (path:string,folderName:string):Promise<boolean>=>
@@ -80,5 +93,34 @@ export namespace FileSystemHelper{
         const folder = await FileSystem.mkdir(folderPath);
         console.log("creatd: ",folder);
         
+    }
+
+    export const zipFiles = (zipFilePath:string,filesPath:string)=>{
+
+        const targetPath = `${DocumentDirectoryPath}/myFile.zip`
+        const sourcePath = DocumentDirectoryPath
+        console.log("target: ",targetPath);
+        console.log("source: ",sourcePath);
+        
+        
+
+        console.log(zipFilePath);
+        console.log(filesPath);
+        
+    zip(filesPath, zipFilePath)
+    .then((path) => {
+        console.log(`zip completed at ${path}`)
+        })
+        .catch((error) => {
+        console.error(error)
+        })
+    }
+
+    export const clearDocuemntsDir = async (fileNames:string[])=>{
+        await fileNames.reduce(async (previousOperation,name)=>{
+         await previousOperation;
+         console.log("removing file: ",name);
+         await FileSystem.unlink(`${Dirs.DocumentDir}/${name}`)
+        },Promise.resolve())
     }
 }

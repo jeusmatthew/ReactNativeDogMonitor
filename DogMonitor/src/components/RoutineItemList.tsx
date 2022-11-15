@@ -127,15 +127,30 @@ import { RoutineService } from '../services/routine-service';
     //   console.log(e);
     //   ToastAndroid.show('Error escribiendo en el almacenamiento interno', ToastAndroid.SHORT);
     // }
+    const folderName= "filesToSave";
+    const documentToRemove = await FileSystem.ls(Dirs.DocumentDir);
+    await FileSystemHelper.clearDocuemntsDir(documentToRemove);
     const routineAsString = JSON.stringify(routine);
     const routineAsCsv = await CSVHelper.converImuDataInCsv(routine.imu);
-    const folderName = FileSystemHelper.computeFolderName(routine.name);
-    const folderPath = `${Dirs.DocumentDir}/${folderName}/`;
-    await FileSystemHelper.createPrivateFolder(folderPath);
-    console.log("folder name: ",folderName);
-    const jsonFileName =await FileSystemHelper.writeFileInPrivateFolder(routineAsString,"imu.json",folderPath);
-    const csvFileName = await FileSystemHelper.writeFileInPrivateFolder(routineAsCsv,"imu.csv",folderPath);
-    await FileSystemHelper.copyRoutineFolder(folderPath,folderName)
+    const zipName = FileSystemHelper.computeZipName(routine.name);
+    const folderPath =`${Dirs.DocumentDir}/${folderName}`
+    await FileSystem.mkdir(folderPath)
+    console.log("folder name: ",zipName);
+    const jsonFileName = FileSystemHelper.computeUniqueName("imu","json");
+    await FileSystemHelper.writeFileInPrivateFolder(routineAsString,jsonFileName);
+    const csvFileName =FileSystemHelper.computeUniqueName("imu","csv");
+     await FileSystemHelper.writeFileInPrivateFolder(routineAsCsv,csvFileName);
+    const lsResult1 = await FileSystem.ls(Dirs.DocumentDir);
+    console.log("lsResult1: ----->",lsResult1);
+    const zipFilePath = `${Dirs.DocumentDir}/${zipName}`
+    console.log("ziiiiip");
+    
+    await FileSystemHelper.zipFiles(zipFilePath,folderPath)
+    console.log("end zip");
+    
+    const lsResult = await FileSystem.ls(Dirs.DocumentDir);
+    console.log("lsResult2---------------->",lsResult);
+    await FileSystemHelper.copyRoutineFolder(zipFilePath,zipName)
     
   }
 
