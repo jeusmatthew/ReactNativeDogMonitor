@@ -89,70 +89,21 @@ import { RoutineService } from '../services/routine-service';
     }
 
   }
+
+  /* Para implementar csv y zip revisar el documento csv_zip_method.txt en la carpeta tests */
   const saveRoutineInDownloads = async (routine:Routine)=>
   {
-    // try{
-    //   console.log("creating directory");
-    //   const routineAsString = JSON.stringify(routine);
-    //   const routineAsCsv = CSVHelper.converImuDataInCsv(routine.imu)
-    //   console.log(routineAsString);
-    //   console.log("creating date...");
-    //   const currentDate = new Date();
-    //   let currentDateString =  (currentDate.toLocaleDateString() +" "+ currentDate.toLocaleTimeString())+"."+currentDate.getMilliseconds()
-    //   currentDateString = currentDateString.replace("/","-")
-    //   currentDateString = currentDateString.replace("/","-")
-    //   console.log("current date: ",currentDateString);
-    //   const fileName = `${routine.name}_${currentDateString}.json`
-    //   console.log("file name: ",fileName);
-      
-    //   const path =`${Dirs.DocumentDir}/${fileName}`;
-    //   console.log(`saving in path ${path}...`);
-    //   if (await FileSystem.exists(path)){ 
-    //     console.log("file exist");
-    //   }else{
-    //     console.log("file not exist");
-        
-    //   }
-    //   const text = await FileSystem.writeFile(path,routineAsString,"utf8");
-    //   if (!await FileSystem.exists(path)){ 
-    //     console.log("file not exist");
-    //     return;
-    //   }else{
-    //     console.log("file write success");
-    //   }// check to see if our filePath was created
-    //   await FileSystem.cpExternal(path,fileName,'downloads');// copies our file to the downloads folder/directory
-    //   ToastAndroid.show('Se han descargado los datos correctamente', ToastAndroid.SHORT);
-    // }catch(e)
-    // {
-    //   console.log(e);
-    //   ToastAndroid.show('Error escribiendo en el almacenamiento interno', ToastAndroid.SHORT);
-    // }
-    const folderName= "filesToSave";
+
     const documentToRemove = await FileSystem.ls(Dirs.DocumentDir);
     await FileSystemHelper.clearDocuemntsDir(documentToRemove);
     const routineAsString = JSON.stringify(routine);
-    const routineAsCsv = await CSVHelper.converImuDataInCsv(routine.imu);
-    const zipName = FileSystemHelper.computeZipName(routine.name);
-    const folderPath =`${Dirs.DocumentDir}/${folderName}`
-    await FileSystem.mkdir(folderPath)
-    console.log("folder name: ",zipName);
-    const jsonFileName = FileSystemHelper.computeUniqueName("imu","json");
-    await FileSystemHelper.writeFileInPrivateFolder(routineAsString,jsonFileName);
-    const csvFileName =FileSystemHelper.computeUniqueName("imu","csv");
-     await FileSystemHelper.writeFileInPrivateFolder(routineAsCsv,csvFileName);
-    const lsResult1 = await FileSystem.ls(Dirs.DocumentDir);
-    console.log("lsResult1: ----->",lsResult1);
-    const zipFilePath = `${Dirs.DocumentDir}/${zipName}`
-    console.log("ziiiiip");
-    
-    await FileSystemHelper.zipFiles(zipFilePath,folderPath)
-    console.log("end zip");
-    
-    const lsResult = await FileSystem.ls(Dirs.DocumentDir);
-    console.log("lsResult2---------------->",lsResult);
-    await FileSystemHelper.copyRoutineFolder(zipFilePath,zipName)
-    
+    const jsonFileName = FileSystemHelper.computeUniqueName(routine.name,"json");
+    await FileSystemHelper.writeFileInDocumentsFolder(routineAsString,jsonFileName);
+    const fileSource = `${Dirs.DocumentDir}/${jsonFileName}`;
+    await FileSystem.cpExternal(fileSource,jsonFileName,'downloads');// copies our file to the downloads folder/directory
+ 
   }
+
 
   const saveAudioInDownloads = async (audioData:any,audioName:string)=>
   {
