@@ -1,6 +1,7 @@
-import React,{ useState }  from 'react';
+import React,{ useState,useEffect }  from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, TextInput,Check, TouchableOpacity, View, ToastAndroid, TouchableWithoutFeedback, ActivityIndicator, Modal } from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { DeviceService } from '../services';
 import { RoutineService } from '../services/routine-service';
 
 export const RoutinesScreen = ({ navigation }) => {
@@ -8,13 +9,38 @@ export const RoutinesScreen = ({ navigation }) => {
   let [minutes,setMinutes] =useState('0');
   let [routineNameInput,setRoutineNameInput] = useState("");
   let [dogNameInput,setDogNameInput] = useState("");
+  let [runningRoutineName,setRunningRoutineName] = useState("");
+  let [runningRoutineId,setRunningRoutineId] = useState(0);
+  let [isRoutineRunning,setRoutineRunning] = useState(false);
   let [startingRoutine,setStartingRoutine] = useState(false);
   const routineNameInputElement = React.useRef();
   const dogNameInputElement = React.useRef()
   const [startingRoutineModalVisibility,setStartingRoutineModalVisibility] = useState(false)
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try{
+        const routineRunningResponse = await DeviceService.isDeviceRunning();
+        console.log(routineRunningResponse);       
+       if(routineRunningResponse.running){
+         setRunningRoutineId(routineRunningResponse.routine_id!);
+         setRunningRoutineName(routineRunningResponse.routine_name!);
+         setRoutineRunning(true);
+       }else{
+         setRoutineRunning(false);
+       }
+
+      }catch(error){
+        console.log("Error getting device running status");
+        
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
     return (
       <SafeAreaView style={styles.safe_area}>
-                  <Modal
+          <Modal
           animationType="slide"
           transparent={true}
           visible={startingRoutine}
@@ -26,7 +52,7 @@ export const RoutinesScreen = ({ navigation }) => {
           }}
         >
             
-            <View style={styles.modal_container}>
+          <View style={styles.modal_container}>
                 <TouchableWithoutFeedback>
                  <View style={styles.modal_card_container}>
                         <ActivityIndicator  ></ActivityIndicator>
@@ -35,6 +61,8 @@ export const RoutinesScreen = ({ navigation }) => {
                 </TouchableWithoutFeedback>
             </View>
         </Modal>
+        { !isRoutineRunning ? (
+        <View>
         <Text style={styles.text}>Nombre de rutina</Text>
         <TextInput ref = {routineNameInputElement} style={styles.text_input } placeholder="Nombre de la rutina"
          onChangeText={(text)=>{
@@ -64,7 +92,7 @@ export const RoutinesScreen = ({ navigation }) => {
           }}/>
         </View>) :null}
         <View style={styles.buttons_area} >
-            <TouchableOpacity
+            {/* <TouchableOpacity
                     style={styles.button_red}
                     onPress={async () => {
                       ToastAndroid.show('Deteniendo rutina...', ToastAndroid.SHORT);
@@ -80,7 +108,7 @@ export const RoutinesScreen = ({ navigation }) => {
                       
             }}>
               <Text style={{color: '#FFFFFF'}}>Finalizar</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
                     style={styles.button_green}
                     onPress={async () => {
@@ -95,15 +123,48 @@ export const RoutinesScreen = ({ navigation }) => {
                         console.log("crear fields...");
                         setRoutineNameInput("");
                         setDogNameInput("");
-                        dogNameInputElement.current.clear();
-                        routineNameInputElement.current.clear();
+                        //dogNameInputElement.current.clear();
+                        //routineNameInputElement.current.clear();
                       }
                       setStartingRoutine(false);
                       
             }}>
-              <Text style={{color: '#FFFFFF'}}>Iniciar </Text>
+              <Text style={{color: '#FFFFFF'}}>Iniciar </Text> 
             </TouchableOpacity>
         </View>
+        {/* {true ?
+        (<View style = {styles.running_routine_data}>
+          <Text style ={styles.text}>Rutina en progreso: {runningRoutineName}</Text>
+        </View>):null} */}
+        </View>) :
+        (
+        <View style={styles.running_routine_container}>
+            <View>
+                 <View>
+                        <ActivityIndicator  size="large" color="#60ADB7" style={{marginBottom:15}}></ActivityIndicator>
+                        <Text style ={styles.text}>La rutina {runningRoutineName} se encuentra en proceso...</Text>
+                        <TouchableOpacity
+                            style={styles.button_red}
+                            onPress={async () => {
+                              ToastAndroid.show('Deteniendo rutina...', ToastAndroid.SHORT);
+                              const stopRoutineResponse = await RoutineService.stopRoutine();
+                              if(stopRoutineResponse?.success)
+                              {
+                                ToastAndroid.show('Rutina finalizada', ToastAndroid.SHORT);
+                              }else{
+                                ToastAndroid.show('La rutina no pudo ser detenida o no hay rutinas corriendo', ToastAndroid.SHORT);
+                              }
+                              console.log("stop routine");
+                            }}>
+                          <Text style={{color: '#FFFFFF'}}>Finalizar rutina</Text>
+                        </TouchableOpacity>
+                </View>
+            </View>
+        </View>)}
+
+
+
+
       </SafeAreaView>
       );
 };
@@ -130,6 +191,15 @@ const startRoutine = async (dogName:string,routineName:string):Promise<boolean>=
 }
 
 const styles = StyleSheet.create({
+  running_routine_container:{
+    flex:1,
+    alignItems:"center",
+    alignContent:"center",
+    justifyContent:"center",
+  },
+  running_routine_data:{
+    alignItems:"baseline"
+  },
   device_name:{
       flexDirection:'column',
       flex:1,
@@ -212,9 +282,9 @@ const styles = StyleSheet.create({
     buttons_area:
     {
       flexDirection:'row',
-      justifyContent:'space-between',
-      marginLeft:30,
-      marginRight:30
+      justifyContent:'center',
+      marginLeft:0,
+      marginRight:0
     },
     modal_container:
     {
