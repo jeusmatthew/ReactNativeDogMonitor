@@ -66,7 +66,7 @@ import { HelathService } from '../services';
               {this.state.testingHealth ? (
                 <View style={styles.center_card}>
                   <ActivityIndicator size="large" color="#60ADB7" />
-                  <Text>conectando...</Text>
+                  <Text style={{color:"#696969"}}>conectando...</Text>
                 </View>
               ) : null}
               {this.state.testingHealth ? null : (

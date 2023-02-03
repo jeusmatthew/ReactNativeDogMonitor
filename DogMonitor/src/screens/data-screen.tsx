@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     },
     text_downloading_data:
     {
+      color:"#696969",
       marginTop:10
       
     }
