@@ -305,6 +305,7 @@ const styles = StyleSheet.create({
     },
     text_starting_routine_data:
     {
+      color:"#696969",
       marginTop:10
       
     }
