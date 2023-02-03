@@ -66,7 +66,7 @@ export const DeviceInformationScreen = ({ navigation }) => {
                         </View>
                         <View>
                         <Text style={styles.modal_text_label} >Nombre del dispositivo</Text>
-                        <TextInput value={deviceName} style={styles.modal_text_input} onChangeText={(text)=>{
+                        <TextInput value={deviceName} style={styles.modal_text_input} placeholderTextColor="#b8b8b8" onChangeText={(text)=>{
                             setDeviceName(text)
                         }}/>
                         </View>
@@ -117,7 +117,7 @@ export const DeviceInformationScreen = ({ navigation }) => {
             (<View style={{flex:1}}>
                 <Text style={styles.dog_name_label}>Nombre del dispositivo</Text>
                 <View style ={styles.text_input_view}>
-                    <TextInput editable={false} placeholder="Nombre del dispositivo" value={deviceName}/>
+                    <TextInput editable={false} placeholder="Nombre del dispositivo" placeholderTextColor="#b8b8b8" value={deviceName} style={{color:"#696969"}}/>
                     <TouchableOpacity onPress={()=>{setModalVisibility(true)}}>
                     <Image source={require('../../assets/pencil.png')} style={styles.edit_icon}  />
                     </TouchableOpacity>
@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
         borderRadius:10
     },
     modal_text_input:{
+        color:"#696969",
         borderColor:"#60ADB7E5",
         borderWidth:2,
         borderRadius:10,
@@ -310,6 +311,7 @@ const styles = StyleSheet.create({
         
       },
       text_input:{
+          color:"#696969",
           borderColor:"#60ADB7E5",
           borderWidth:2,
           borderRadius:10,
@@ -323,6 +325,7 @@ const styles = StyleSheet.create({
           color:"#717171"
       },
       dog_name_label:{
+        color:"#696969",
         marginLeft:10,
         marginRight:10,
         marginBottom:5,
@@ -339,6 +342,7 @@ const styles = StyleSheet.create({
       },
       text_input_view:
       {
+        color:"#696969",
         borderColor:"#60ADB7E5",
         borderWidth:2,
         borderRadius:10,

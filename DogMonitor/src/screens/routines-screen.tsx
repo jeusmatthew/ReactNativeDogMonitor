@@ -64,13 +64,13 @@ export const RoutinesScreen = ({ navigation }) => {
         { !isRoutineRunning ? (
         <View>
         <Text style={styles.text}>Nombre de rutina</Text>
-        <TextInput ref = {routineNameInputElement} style={styles.text_input } placeholder="Nombre de la rutina"
+        <TextInput ref = {routineNameInputElement} style={styles.text_input } placeholder="Nombre de la rutina" placeholderTextColor="#b8b8b8"
          onChangeText={(text)=>{
           setRoutineNameInput(text)
       }}
         />
         <Text style={styles.text}>Nombre del perro</Text>
-        <TextInput ref={dogNameInputElement } style={styles.text_input } placeholder="Nombre del perro"  onChangeText={(text)=>{
+        <TextInput ref={dogNameInputElement } style={styles.text_input } placeholder="Nombre del perro" placeholderTextColor="#b8b8b8" colo  onChangeText={(text)=>{
                             setDogNameInput(text)
                         }}/>
         {/* <BouncyCheckbox
@@ -250,12 +250,13 @@ const styles = StyleSheet.create({
       
     },
     text_input:{
+        color:"#696969",
         borderColor:"#60ADB7E5",
         borderWidth:2,
         borderRadius:10,
         marginTop:5,
         paddingLeft:10,
-        marginBottom:10
+        marginBottom:10,
     },
     text:
     {
