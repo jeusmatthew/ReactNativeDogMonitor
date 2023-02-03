@@ -2,6 +2,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { BASE_URL } from '../constants';
 import { Device,DeviceSensors } from '../models';
+import { DeviceRunningData } from '../models/Device';
 
 export namespace DeviceService
 {
@@ -22,6 +23,13 @@ export namespace DeviceService
     {
         const deviceResponse:AxiosResponse  =await axios.put(`${BASE_URL}/api/services/device/1`,input);   
         const deviceData:Device = deviceResponse.data.data;   
+        return deviceData; 
+    }
+
+    export const isDeviceRunning =  async():Promise<DeviceRunningData>=>
+    {
+        const deviceResponse:AxiosResponse  =await axios.get(`${BASE_URL}/api/services/is-running`);   
+        const deviceData:DeviceRunningData = deviceResponse.data;   
         return deviceData; 
     }
 

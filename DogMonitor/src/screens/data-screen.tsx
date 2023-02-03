@@ -109,7 +109,7 @@ export const DataScreen = ({ navigation }) => {
 
 
         <View style ={styles.text_input_view}>
-          <TextInput style = {styles.text_input} placeholder="Nombre de la mascota"  onChangeText={(text)=>{
+          <TextInput style = {styles.text_input} placeholder="Nombre de la mascota" placeholderTextColor="#b8b8b8"  onChangeText={(text)=>{
                             setSearchText(text)
           }}/>
           <TouchableOpacity onPress={()=>{ getRoutines(searchText)}}>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
       flexDirection:'column'
     },
     text_input:{
-     
+     color:"#696969",
       marginTop:0,
       paddingLeft:10,
       marginBottom:0,
