@@ -90,6 +90,32 @@ export namespace FileSystemHelper{
           }
     }
 
+    export const writeFileInDocumentsFolderBase64 =async  (data:string,fileName:string):Promise<boolean>=>
+    {
+        try{
+           
+            const fileNameWithExtension =fileName;
+            console.log("file name: ",fileNameWithExtension);
+            const path =`${Dirs.DocumentDir}/${fileNameWithExtension}`;
+            console.log(`saving in path ${path}...`);
+            await FileSystem.writeFile(path,data,"base64");
+            if (!await FileSystem.exists(path)){ 
+              console.log("file no created on internal folder ...");
+              throw new Error("file no created on internal folder ...")
+            }else{
+              console.log("file created on internal folder...");
+            }// check to see if our filePath was created
+            //await FileSystem.cpExternal(path,"test",'downloads');// copies our file to the downloads folder/directory
+            //ToastAndroid.show('Se han descargado los datos correctamente', ToastAndroid.SHORT);
+            return true;
+          }catch(e)
+          {
+            console.log(e);
+            ToastAndroid.show('Error escribiendo en el almacenamiento interno', ToastAndroid.SHORT);
+            return false;
+          }
+    }
+
     export const computeZipName =  (name:string):string =>{
         const currentDate = new Date();
         let currentDateString =  (currentDate.toLocaleDateString() +" "+ currentDate.toLocaleTimeString())+"."+currentDate.getMilliseconds()
