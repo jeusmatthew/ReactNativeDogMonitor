@@ -65,6 +65,19 @@ const App = () => {
 
 
   React.useEffect(() => {
+    
+    const connectionStart = async ()=>{
+      try{
+        const routineRunningResponse = await DeviceService.getDeviceInformation();
+        if(applicationConnected!) setConnection(true)
+      }catch(error){
+        console.log("Connecting error...");
+        
+        setConnection(false)
+      }
+    }
+    connectionStart()
+    
     const interval = setInterval(async () => {
       // const connectionState =!applicationConnected;
       // setConnection(true)
