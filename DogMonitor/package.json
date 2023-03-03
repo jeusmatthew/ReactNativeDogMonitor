@@ -20,7 +20,7 @@
     "axios": "^0.26.1",
     "luxon": "^2.4.0",
     "react": "17.0.2",
-    "react-native": "0.68.0",
+    "react-native": "0.68.5",
     "react-native-bouncy-checkbox": "^2.1.10",
     "react-native-csv": "^0.2.0",
     "react-native-file-access": "^2.4.1",

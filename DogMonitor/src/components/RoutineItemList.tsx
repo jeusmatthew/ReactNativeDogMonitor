@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import {ToastAndroid, Alert, View, StyleSheet, SafeAreaView, FlatList, Text, TouchableOpacity, Image, ActivityIndicator, PermissionsAndroid } from 'react-native';
 import { Dirs, FileSystem } from 'react-native-file-access';
+import { BASE_URL } from '../constants';
 import { CSVHelper } from '../helpers';
 import { FileSystemHelper } from '../helpers/file-system-helper';
 import { Routine } from '../models';
@@ -105,26 +106,33 @@ import { RoutineService } from '../services/routine-service';
   }
 
 
-  const saveAudioInDownloads = async (audioData:any,audioName:string)=>
+  const saveAudioInDownloads = async (routine:Routine)=>
   {
-    try{
-      console.log("creating directory");
-      const fileName = audioName;
-      const path =`${Dirs.DocumentDir}/${fileName}`;
-      console.log(`saving in path ${path}...`);
-      console.log("saving audio as utf8");
+    // try{
+    //   console.log("creating directory");
+    //   const fileName = FileSystemHelper.computeUniqueName(routine.name,"wav");
+    //   //const fileName = audioName;
+    //   const path =`${Dirs.DocumentDir}/${fileName}`;
+    //   console.log(`saving in path ${path}...`);
+    //   console.log("saving audio as base64");
       
-      const text = await FileSystem.writeFile(path,audioData,"base64");
-      if (!FileSystem.exists(path)){ 
-        return;
-      }// check to see if our filePath was created
-      await FileSystem.cpExternal(path,fileName,'downloads');// copies our file to the downloads folder/directory
-      ToastAndroid.show('Se han descargado el audio correctamente', ToastAndroid.SHORT);
-    }catch(e)
-    {
-      console.log(e);
-      ToastAndroid.show('Error escribiendo el audio en el almacenamiento interno', ToastAndroid.SHORT);
-    }
+    //   const audio = await FileSystem.writeFile(path,routine.audio![0].data,"base64");
+    //   if (!FileSystem.exists(path)){ 
+    //     return;
+    //   }// check to see if our filePath was created
+    //   await FileSystem.cpExternal(path,fileName,'downloads');// copies our file to the downloads folder/directory
+    //   ToastAndroid.show('Se han descargado el audio correctamente', ToastAndroid.SHORT);
+    // }catch(e)
+    // {
+    //   console.log(e);
+    //   ToastAndroid.show('Error escribiendo el audio en el almacenamiento interno', ToastAndroid.SHORT);
+    // }
+    const documentToRemove = await FileSystem.ls(Dirs.DocumentDir);
+    await FileSystemHelper.clearDocuemntsDir(documentToRemove);
+    const audioName = FileSystemHelper.computeUniqueName(routine.name,"wav");
+    await FileSystemHelper.writeFileInDocumentsFolderBase64(routine.audio![0].data,audioName);
+    const fileSource = `${Dirs.DocumentDir}/${audioName}`;
+    await FileSystem.cpExternal(fileSource,audioName,'downloads');// copies our file to the downloads folder/directory
     
   }
   const downloadDataPressed =async  (routine:Routine,downloadData:any,savingInDevice:any)=>
@@ -136,12 +144,14 @@ import { RoutineService } from '../services/routine-service';
     }
     console.log("seachig routine with id: ",routine.id);
     downloadData(true)
-    const routineInDevice =  await RoutineService.getRoutineById(routine.id);
-    const audioFile = await RoutineService.getAudioFile("static_file_test.jpg")
+    const routineInDevice =  await RoutineService.getRoutineById(routine.id!);
+    //const audioFile = await RoutineService.getAudioFile(routineInDevice!.audio![0].file_name)
+    //console.log(routineInDevice?.audio![0].data!);
+    
     savingInDevice(true)
     downloadData(false)
     await saveRoutineInDownloads(routineInDevice!)
-    //await saveAudioInDownloads(audioFile,"static_file_test.jpg")
+    await saveAudioInDownloads(routineInDevice!)
     savingInDevice(false)
     console.log("search routine done...");
     
