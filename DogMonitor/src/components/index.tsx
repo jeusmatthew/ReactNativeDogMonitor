@@ -1,1 +1,1 @@
-export {RoutineItem} from './RoutineItemList';
+export {RoutineItem} from './RoutineItemList'
