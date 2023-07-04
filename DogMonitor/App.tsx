@@ -16,17 +16,20 @@ import {
   useColorScheme,
 } from 'react-native';
 
-import {
-  Colors
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import {ConnectionScreen, HomeScreen, HomeStackScreen,ProfileScreen,SettingsScreen} from './src/screens'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DeviceService } from './src/services';
+import {NavigationContainer} from '@react-navigation/native';
+import {
+  ConnectionScreen,
+  HomeScreen,
+  HomeStackScreen,
+  ProfileScreen,
+  SettingsScreen,
+} from './src/screens';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {DeviceService} from './src/services';
 const HomeStack = createNativeStackNavigator();
-
 
 // const App = () => {
 //   const isDarkMode = useColorScheme() === 'dark';
@@ -61,61 +64,78 @@ const App = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  let [applicationConnected,setConnection] = React.useState(true);
-
+  let [applicationConnected, setConnection] = React.useState(true);
 
   React.useEffect(() => {
-    
-    const connectionStart = async ()=>{
-      try{
-        const routineRunningResponse = await DeviceService.getDeviceInformation();
-        if(applicationConnected!) setConnection(true)
-      }catch(error){
-        console.log("Connecting error...");
-        
-        setConnection(false)
+    const connectionStart = async () => {
+      try {
+        const routineRunningResponse =
+          await DeviceService.getDeviceInformation();
+        if (applicationConnected!) {
+          setConnection(true);
+        }
+      } catch (error) {
+        console.log('Connecting error...');
+
+        setConnection(false);
       }
-    }
-    connectionStart()
-    
+    };
+    connectionStart();
+
     const interval = setInterval(async () => {
       // const connectionState =!applicationConnected;
       // setConnection(true)
-      try{
-        const routineRunningResponse = await DeviceService.getDeviceInformation();
-        if(applicationConnected!) setConnection(true)
-      }catch(error){
-        console.log("Connecting error...");
-        
-        setConnection(false)
+      try {
+        const routineRunningResponse =
+          await DeviceService.getDeviceInformation();
+        if (applicationConnected!) {
+          setConnection(true);
+        }
+      } catch (error) {
+        console.log('Connecting error...');
+
+        setConnection(false);
       }
-      console.log("interval to check conecction------------------------------------------>",applicationConnected);
+      console.log(
+        'interval to check conecction------------------------------------------>',
+        applicationConnected,
+      );
     }, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  
   return (
-   <NavigationContainer >
-      { applicationConnected ? (<HomeStack.Navigator>
-      <HomeStack.Screen name="Dog training data collector" component={ConnectionScreen} options= {
-        {
-          headerStyle:styles.header,
-          headerTintColor:"#FFFFFF"
-        }
-      }/>
-      <HomeStack.Screen name="Home" component={HomeScreen} options={{
-        headerShown:false
-      }} />
-      </HomeStack.Navigator>):(
+    <NavigationContainer>
+      {applicationConnected ? (
+        <HomeStack.Navigator>
+          <HomeStack.Screen
+            name="Dog training data collector"
+            component={ConnectionScreen}
+            options={{
+              headerStyle: styles.header,
+              headerTintColor: '#FFFFFF',
+            }}
+          />
+          <HomeStack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </HomeStack.Navigator>
+      ) : (
         <SafeAreaView style={styles.disconnected_container}>
-          <Image source={require('./assets/disconnected.png')} style={styles.disconnected_image}/>
-          <Text style ={{marginTop:10}}>Error conectando con el dispositivo</Text>
-
+          <Image
+            source={require('./assets/disconnected.png')}
+            style={styles.disconnected_image}
+          />
+          <Text style={{marginTop: 10}}>
+            Error conectando con el dispositivo
+          </Text>
         </SafeAreaView>
-
       )}
-   </NavigationContainer>
+    </NavigationContainer>
   );
 };
 // const styles = StyleSheet.create({
@@ -137,38 +157,37 @@ const App = () => {
 //   },
 // });
 const styles = StyleSheet.create({
-  disconnected_image:{
-    maxHeight:100,
-    maxWidth:100
+  disconnected_image: {
+    maxHeight: 100,
+    maxWidth: 100,
   },
   disconnected_container: {
     flex: 1,
     padding: 24,
-    backgroundColor: "#eaeaea",
-    justifyContent:'center',
-    alignItems:'center'
-  },  
+    backgroundColor: '#eaeaea',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     padding: 24,
-    backgroundColor: "#eaeaea"
+    backgroundColor: '#eaeaea',
   },
   title: {
     marginTop: 16,
     paddingVertical: 8,
     borderWidth: 4,
-    borderColor: "#20232a",
+    borderColor: '#20232a',
     borderRadius: 6,
-    backgroundColor: "#61dafb",
-    color: "#20232a",
-    textAlign: "center",
+    backgroundColor: '#61dafb',
+    color: '#20232a',
+    textAlign: 'center',
     fontSize: 30,
-    fontWeight: "bold"
+    fontWeight: 'bold',
   },
-  header:
-  {
-    backgroundColor:'#60ADB7'
-  }
+  header: {
+    backgroundColor: '#60ADB7',
+  },
 });
 
 export default App;

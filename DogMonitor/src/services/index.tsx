@@ -1,2 +1,2 @@
-export {HelathService} from './health-service'
-export {DeviceService} from './device-service'
+export {HelathService} from './health-service';
+export {DeviceService} from './device-service';
