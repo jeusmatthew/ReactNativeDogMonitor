@@ -10,7 +10,9 @@
 
 import {
   Image,
+  SafeAreaView,
   StyleSheet,
+  Text,
   useColorScheme,
 } from 'react-native';
 
@@ -22,6 +24,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import {ConnectionScreen, HomeScreen, HomeStackScreen,ProfileScreen,SettingsScreen} from './src/screens'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { DeviceService } from './src/services';
 const HomeStack = createNativeStackNavigator();
 
 
@@ -57,9 +60,44 @@ const App = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  let [applicationConnected,setConnection] = React.useState(true);
+
+
+  React.useEffect(() => {
+    
+    const connectionStart = async ()=>{
+      try{
+        const routineRunningResponse = await DeviceService.getDeviceInformation();
+        if(applicationConnected!) setConnection(true)
+      }catch(error){
+        console.log("Connecting error...");
+        
+        setConnection(false)
+      }
+    }
+    connectionStart()
+    
+    const interval = setInterval(async () => {
+      // const connectionState =!applicationConnected;
+      // setConnection(true)
+      try{
+        const routineRunningResponse = await DeviceService.getDeviceInformation();
+        if(applicationConnected!) setConnection(true)
+      }catch(error){
+        console.log("Connecting error...");
+        
+        setConnection(false)
+      }
+      console.log("interval to check conecction------------------------------------------>",applicationConnected);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  
   return (
    <NavigationContainer >
-      <HomeStack.Navigator>
+      { applicationConnected ? (<HomeStack.Navigator>
       <HomeStack.Screen name="Dog training data collector" component={ConnectionScreen} options= {
         {
           headerStyle:styles.header,
@@ -69,7 +107,14 @@ const App = () => {
       <HomeStack.Screen name="Home" component={HomeScreen} options={{
         headerShown:false
       }} />
-      </HomeStack.Navigator>
+      </HomeStack.Navigator>):(
+        <SafeAreaView style={styles.disconnected_container}>
+          <Image source={require('./assets/disconnected.png')} style={styles.disconnected_image}/>
+          <Text style ={{marginTop:10}}>Error conectando con el dispositivo</Text>
+
+        </SafeAreaView>
+
+      )}
    </NavigationContainer>
   );
 };
@@ -92,6 +137,17 @@ const App = () => {
 //   },
 // });
 const styles = StyleSheet.create({
+  disconnected_image:{
+    maxHeight:100,
+    maxWidth:100
+  },
+  disconnected_container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: "#eaeaea",
+    justifyContent:'center',
+    alignItems:'center'
+  },  
   container: {
     flex: 1,
     padding: 24,
